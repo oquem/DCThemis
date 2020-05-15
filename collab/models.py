@@ -7,6 +7,8 @@ class domaine(models.Model):
     nomDomaine = models.CharField(max_length=300)
     def __str__(self):
         return self.nomDomaine
+    class Meta: 
+        verbose_name = 'Secteur Client'
 
 class client(models.Model):
     nomClient = models.CharField(max_length=250)
@@ -69,6 +71,8 @@ class collaborateurs(models.Model):
         return self.nomCollaborateur
     def get_absolute_url(self):
         return "/consultant/%i/" % self.id
+    class Meta: 
+        verbose_name = 'Consultant'
 
 #Experiences
 class experiences(models.Model):
@@ -87,6 +91,8 @@ class experiences(models.Model):
     def get_absolute_url(self):
         collab=self.collaborateurMission.id
         return "/consultant/%i/" % collab
+    class Meta: 
+        verbose_name = 'Intervention'
 
 #Projet (un projet peut englober plusieurs Expériences par exemple projet SAPHIR)
 class projet(models.Model):
