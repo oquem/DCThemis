@@ -77,7 +77,9 @@ def recup_mission(id_client):
 @register.filter(name='recup_mission_en_cours')
 def recup_mission_en_cours(id_client):
     nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
-    return nb
+    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
+    nb3=nb+nb2
+    return nb3
 
 #Definir statut client
 @register.filter(name='statut_client')
