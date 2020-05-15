@@ -1,0 +1,123 @@
+{% extends 'collab/base.html' %}
+{% block content %}    
+<div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="text-center panel-title">Consultants </h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>Consultant(s) enregistrés</td>
+                                        <td>{{nbConsultant}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consultant(s) en mission</td>
+                                        <td>{{nbConsultantEnMission}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consultant(s) en intercontrat</td>
+                                        <td>{{nbConsultantInterco}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taux Intercontrat</td>
+                                        <td>{{txInterco}}% </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><a class="btn btn-info btn-block" role="button" href="{% url 'liste_consultant'%}">Voir Consultant</a></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="text-center panel-title">Clients </h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>Client(s) enregistrés</td>
+                                        <td>{{nbClient}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Client(s) actifs</td>
+                                        <td>{{nbClientActif}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Client(s) inactifs</td>
+                                        <td>{{nbClientInactif}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tauxs clients inactifs</td>
+                                        <td>{{txClientInactif}}% </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div><a class="btn btn-info btn-block" role="button" href="{% url 'liste_client'%}">Voir Clients</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="text-center panel-title">Compétences </h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>Compétence(s) enregistrée(s)</td>
+                                        <td>{{nbCompe}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Compétence(s) moyenne par consultant</td>
+                                        <td>{{moyenneCompetence}}</td>
+                                    </tr>
+                                    {% for elt in topCompetencefront %}
+                                    <tr>
+                                        <td>Top {{ forloop.counter }} Compétence</td>
+                                        <td>{{elt}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><a class="btn btn-info btn-block" role="button" href="{% url 'liste_competence'%}">Voir Compétences</a></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="text-center panel-title">Outils </h3></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tbody>
+                                    <tr>
+                                        <td>Outil(s) enregistré(s)</td>
+                                        <td>{{nbOutils}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Nb Outil(s) moyen par consultant</td>
+                                        <td>{{moyenneOutil}} </td>
+                                    </tr>
+                                    {% for elt in topOutilfront %}
+                                    <tr>
+                                        <td>Top {{ forloop.counter }} Outil</td>
+                                        <td>{{elt}}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div><a class="btn btn-info btn-block" role="button" href="{% url 'liste_outil'%}">Voir Outils</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

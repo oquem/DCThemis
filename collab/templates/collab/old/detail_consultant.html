@@ -1,0 +1,216 @@
+{% load static %}
+{% load admin_urls %}
+{% load collab_extras %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cv {{collab.prenomCollaborateur}} {{collab.nomCollaborateur}} Themis Conseil</title>
+    <link rel="stylesheet" href={% static "collab/assets/bootstrap/css/bootstrap.min.css" %}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,80">
+    <link rel="stylesheet" href={% static "collab/assets/css/styles.css" %}>
+    <link rel="stylesheet" href={% static "collab/assets/css/Full-Width-Center-Container.css" %}>
+    <link rel="stylesheet" href={% static "collab/assets/css/Simple-Profile-Info.css" %}>
+    <link rel="stylesheet" href={% static "collab/assets/css/Google-Style-Login.css" %}>
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand navbar-link" href="{% url 'index'%}">Collab.io</a>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            </div>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li role="presentation"><a href="{% url 'index'%}">Accueill</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Collaborateurs <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_consultant'%}">Liste Collaborateurs</a></li>
+                            <li role="presentation"><a href="#">Ajout d'un collaborateur</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Clients <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_client'%}">Liste Clients</a></li>
+                            <li role="presentation"><a href="{% url 'clientCreateView'%}">Ajout d'un client</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Compétences <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_competence'%}">Liste Compétences</a></li>
+                            <li role="presentation"><a href="{% url 'competencesCreateView'%}">Ajout d'une compétence</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Outils <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_outil'%}">Liste Outils</a></li>
+                            <li role="presentation"><a href="{% url 'outilsCreateView'%}">Ajout d'un outil</a></li>
+                        </ul>
+                    </li>
+                    <li role="presentation"><a href="#">CRA </a></li>
+                    <li role="presentation"><a href="#" id="nav_login" class="navbar-nav ml-auto">Connexion / Deconnexion</a></li>
+                    <li role="presentation"><a href="{% url 'admin:index'%}" id="nav_login" class="navbar-nav ml-auto">Admin </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="login-card"><img src={% static "collab/assets/img/avatar_2x.png" %} class="profile-img-card">
+                    <p class="profile-name-card">{{collab.prenomCollaborateur}} {{collab.nomCollaborateur}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if collab.nbAnneeExperience == '1' %}
+                <h1 class="text-center">{{collab.titreCollaborateur}} - {{collab.nbAnneeExperience}} an d'expérience</h1>
+                {% else %}
+                <h1 class="text-center">{{collab.titreCollaborateur}} - {{collab.nbAnneeExperience}} ans d'expérience</h1>
+                {% endif %}
+                <p class="lead text-center">{{collab.texteIntroductifCv}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Compétences </h3></div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for compe in collab.listeCompetencesCles.all %}
+                            <li>{{compe}}</li>
+                            {% empty %}
+                            empty list!
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Niveau d'intervention</h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_niveau_inter_consult %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Clients </h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_client_par_consultant %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Secteur </h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_secteur_consultant %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Formation </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.formation}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Parcours </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.parcours}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Outils </h3></div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for outil in collab.outilsCollaborateur.all %}
+                            <li>{{outil}}</li>
+                            {% empty %}
+                            empty list!
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Langues </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.langues}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Missions </h2></div>
+        </div>
+        {% for mission in mission_du_collab %}
+        <div class="row">
+            <div class="col-md-12 colonne_xp">
+                {% if mission.dateFin == None %}
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}} - En cours (9 mois)</h3>
+                {% else %}
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}}/{{mission.dateFin}} (9 mois)</h3>
+                {% endif %}
+                <p><strong>{{mission.contexteMission}}</strong> </p>
+                <p><strong>Descriptif :</strong> {{mission.descriptifMission}} </p>
+                <p><strong>Environnement :</strong> {{mission.environnementMission}} </p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="row" id="row_bouton_cv">
+            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="#" id="bouton_generation_cv">GENERER CV</a></div>
+        </div>
+    </div>
+    <script src={% static "collab/assets/js/jquery.min.js" %}></script>
+    <script src={% static "collab/assets/bootstrap/js/bootstrap.min.js" %}></script>
+</body>
+
+</html>

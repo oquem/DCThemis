@@ -1,0 +1,80 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Site consulting final</title>
+        <link rel="stylesheet" href={% static "collab/assets/bootstrap/css/bootstrap.min.css" %}>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cookie">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,80">
+        <link rel="stylesheet" href={% static "collab/assets/css/styles.css" %}>
+        <link rel="stylesheet" href={% static "collab/assets/css/Full-Width-Center-Container.css" %}>
+        <link rel="stylesheet" href={% static "collab/assets/css/Simple-Profile-Info.css" %}>
+        <link rel="stylesheet" href={% static "collab/assets/css/Google-Style-Login.css" %}>
+    </head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header"><a class="navbar-brand navbar-link" href="{% url 'index'%}">Collab.io</a>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+            </div>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="active" role="presentation"><a href="{% url 'index'%}">Accueill</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Collaborateurs <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_consultant'%}">Liste Collaborateurs</a></li>
+                            <li role="presentation"><a href="#">Ajout d'un collaborateur</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Clients <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_client'%}">Liste Clients</a></li>
+                            <li role="presentation"><a href="{% url 'clientCreateView'%}">Ajout d'un client</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Compétences <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_competence'%}">Liste Compétences</a></li>
+                            <li role="presentation"><a href="{% url 'competencesCreateView'%}">Ajout d'une compétence</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Outils <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_outil'%}">Liste Outils</a></li>
+                            <li role="presentation"><a href="{% url 'outilsCreateView'%}">Ajout d'un outil</a></li>
+                        </ul>
+                    </li>
+                    <li role="presentation"><a href="#">CRA </a></li>
+                    {% if user.is_authenticated %}
+                    <li role="presentation"><a href="{% url 'logout' %}" id="nav_login" class="navbar-nav ml-auto">Deconnexion</a></li>
+                    {% else %}
+                    <li role="presentation"><a href="{% url 'login' %}" id="nav_login" class="navbar-nav ml-auto">Connexion</a></li>
+                    {% endif %}
+                    <li role="presentation"><a href="{% url 'admin:index'%}" id="nav_login" class="navbar-nav ml-auto">Admin </a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% if user.is_authenticated %}
+    <div class="page-header">
+        <h1 class="text-center">Ajout Client</h1></div>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
+                <p>Ajout réalisé avec succes</p>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p style="text-align:center;"> <b>Veuillez vous <a href="/accounts/login">identifier</a></b></p>
+    {% endif %}
+    <script src={% static "collab/assets/js/jquery.min.js" %}></script>
+    <script src={% static "collab/assets/bootstrap/js/bootstrap.min.js" %}></script>
+</body>
+
+</html>

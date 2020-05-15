@@ -1,0 +1,66 @@
+a#nav_login{
+}
+
+div#row_hp.row{
+  padding:20px;
+}
+
+div#liste-consultant.table-responsive{
+  text-align:center;
+}
+
+table th.text-center, table td.text-center{
+  text-align:center;
+}
+
+table th.text-center, table td.text-center{
+  text-align:center;
+}
+
+.table > tbody > tr > td{
+  vertical-align:middle;
+}
+
+.table > tbody > tr > td{
+  vertical-align:middle;
+}
+
+div.col-md-12.colonne_xp{
+  padding:15px;
+  padding-left:30px;
+  padding-right:30px;
+}
+
+h3.text-center.titre_mission{
+  border-top:1px dashed grey;
+  padding-top:10px;
+}
+
+button#bouton_generation_cv.btn.btn-default.btn-block{
+  margin:30px;
+}
+
+button#bouton_generation_cv.btn.btn-default{
+  width:100%;
+  margin:10px;
+}
+
+a#bouton_generation_cv.btn.btn-default{
+}
+
+a#bouton_generation_cv.btn.btn-info.btn-lg{
+  width:100%;
+}
+
+div#row_bouton_cv.row{
+  padding:10px;
+  padding-bottom:30px;
+}
+
+a.btn.btn-primary{
+  text-decoration-color:white;
+}
+
+i.glyphicon.glyphicon-pencil{
+}
+

@@ -1,0 +1,163 @@
+{% extends 'collab/base.html' %}
+{% load collab_extras %}
+{% load static %}
+{% block content %}    
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="login-card"><img src={% static "collab/assets/img/avatar_2x.png" %} class="profile-img-card">
+                    <p class="profile-name-card">{{collab.prenomCollaborateur}} {{collab.nomCollaborateur}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% if collab.nbAnneeExperience == '1' %}
+                <h1 class="text-center">{{collab.titreCollaborateur}} - {{collab.nbAnneeExperience}} an d'expérience</h1>
+                {% else %}
+                <h1 class="text-center">{{collab.titreCollaborateur}} - {{collab.nbAnneeExperience}} ans d'expérience</h1>
+                {% endif %}
+                <p class="lead text-center">{{collab.texteIntroductifCv}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Compétences </h3></div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for compe in collab.listeCompetencesCles.all %}
+                            <li>{{compe}}</li>
+                            {% empty %}
+                            empty list!
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Niveau d'intervention</h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_niveau_inter_consult %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Clients </h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_client_par_consultant %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Secteur </h3></div>
+                    <div class="panel-body">
+                        {% with truc=collab.pk %}
+                        {% with liste=truc|liste_secteur_consultant %}
+                        <ul>
+                            {% for elt in liste %}
+                            <li>{{elt}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Formation </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.formation}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Parcours </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.parcours}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Outils </h3></div>
+                    <div class="panel-body">
+                        <ul>
+                            {% for outil in collab.outilsCollaborateur.all %}
+                            <li>{{outil}}</li>
+                            {% empty %}
+                            empty list!
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Langues </h3></div>
+                    <div class="panel-body">
+                        <p>{{collab.langues}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="text-center">Missions </h2></div>
+        </div>
+        {% for mission in mission_du_collab %}
+        {% with "/admin/collab/experiences/"|addstr:mission.pk|addstr:"/change/" as urlModif %}
+        <div class="row">
+            <div class="col-md-12 colonne_xp">
+                {% if mission.dateFin == None %}
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}} - En cours (9 mois)</h3>
+                {% else %}
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}}/{{mission.dateFin}} (9 mois)</h3>
+                {% endif %}
+                <p><strong>{% with idmission=mission.pk %}{% with contexte=idmission|contexte_projet %}{{contexte}}{% endwith %}{% endwith %}</strong> </p>
+                <p><strong>Descriptif :</strong> {{mission.descriptifMission}} </p>
+                <p><strong>Environnement :</strong> {{mission.environnementMission}} </p>
+                <a class="btn btn-primary bouton_modif_expe" role="button" href={{urlModif}} target="_blank">Modifier </a>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+        <div class="row" id="row_bouton_cv">
+            <div class="col-md-12"><a class="btn btn-success btn-lg" role="button" href="#" target="_blank" id="bouton_ajout_expe" style="width:100%;">Ajouter Expérience</a></div>
+        </div>
+        <div class="row" id="row_bouton_cv">
+            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="#" id="bouton_generation_cv">GENERER CV</a></div>
+        </div>
+    </div>
+{% endblock %}
