@@ -136,6 +136,7 @@
             <div class="col-md-12">
                 <h2 class="text-center">Missions </h2></div>
         </div>
+        {% if mission_du_collab %}
         {% for mission in mission_du_collab %}
         {% with "/admin/collab/experiences/"|addstr:mission.pk|addstr:"/change/" as urlModif %}
         <div class="row">
@@ -153,6 +154,13 @@
         </div>
         {% endwith %}
         {% endfor %}
+        {% else %}
+        <div class="row">
+            <div class="col-md-12 colonne_xp">
+                <p>Pas de mission</p>
+            </div>
+        </div>
+        {% endif %}
         {% with "/admin/collab/experiences/add/?collaborateurMission="|addstr:collab.pk as urlAjout %}
         <div class="row" id="row_bouton_cv">
             <div class="col-md-12"><a class="btn btn-success btn-lg" role="button" href={{urlAjout}} target="_blank" id="bouton_ajout_expe" style="width:100%;">Ajouter Expérience</a></div>
