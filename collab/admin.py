@@ -15,7 +15,7 @@ admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
 class CollabAdmin(admin.ModelAdmin):
     search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence']
-    list_filter = ('estEnIntercontrat','nbAnneeExperience')
+    list_filter = ('estEnIntercontrat','nbAnneeExperience','manager','typeContrat')
     list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
@@ -30,4 +30,7 @@ class ProjetAdmin(admin.ModelAdmin):
     list_display = ('nomProjet', 'nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 admin.site.register(domaine)
-admin.site.register(client)
+class ClientAdmin(admin.ModelAdmin):
+    search_fields = ['nomClient']
+    list_filter = ('domaineClient',)
+admin.site.register(client,ClientAdmin)
