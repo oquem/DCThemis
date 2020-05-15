@@ -153,9 +153,11 @@
         </div>
         {% endwith %}
         {% endfor %}
+        {% with "/admin/collab/experiences/add/?collaborateurMission="|addstr:collab.pk as urlAjout %}
         <div class="row" id="row_bouton_cv">
-            <div class="col-md-12"><a class="btn btn-success btn-lg" role="button" href="#" target="_blank" id="bouton_ajout_expe" style="width:100%;">Ajouter Expérience</a></div>
+            <div class="col-md-12"><a class="btn btn-success btn-lg" role="button" href={{urlAjout}} target="_blank" id="bouton_ajout_expe" style="width:100%;">Ajouter Expérience</a></div>
         </div>
+        {% endwith %}
         <div class="row" id="row_bouton_cv">
             <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="#" id="bouton_generation_cv">GENERER CV</a></div>
         </div>
