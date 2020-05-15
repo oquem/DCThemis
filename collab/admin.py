@@ -5,11 +5,13 @@ from .models import competences, familleCompetences, outils, familleOutils, coll
 
 class CompetenceAdmin(admin.ModelAdmin):
     search_fields = ['nomCompetence']
+    list_display = ('nomCompetence','famille')
     list_filter = ('famille',)
 admin.site.register(competences, CompetenceAdmin)
 admin.site.register(familleCompetences)
 class OutilAdmin(admin.ModelAdmin):
     search_fields = ['nomOutil']
+    list_display = ('nomOutil','famille')
     list_filter = ('famille',)
 admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
