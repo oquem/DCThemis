@@ -8,7 +8,7 @@ from operator import itemgetter
 import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-
+import datetime
 # Homepage
 def index(request):
     template = loader.get_template('collab/index2.html')
@@ -24,11 +24,12 @@ def index(request):
         client_total=client.objects.all()
         count=0
         for elt in client_total:
-            expes_du_client=experiences.objects.filter(client=elt)
-            if expes_du_client.exists():
-                pass
-            else:
+            nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=elt.id).count()
+            nb2 = experiences.objects.filter(dateFin=None,client=elt.id).count()
+            if nb>0 or nb2>0:
                 count+=1
+            else:
+                pass
         return(count)
     nbClientActif = getClientActif()
     nbClientInactif = nbClient - nbClientActif
