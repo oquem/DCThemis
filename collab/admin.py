@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, domaine, client, projet
+from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, domaine, client, projet, BU, gestionManagerialeProjet, gestionCommercialeProjet
 
 class CompetenceAdmin(admin.ModelAdmin):
     search_fields = ['nomCompetence']
@@ -27,8 +27,8 @@ class ExpeAdmin(admin.ModelAdmin):
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
-    search_fields = ['experiencesLiees__client__nomClient','nomProjet']
-    list_filter = ('experiencesLiees__client__nomClient','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme')
+    search_fields = ['client','nomProjet']
+    list_filter = ('client','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme')
     list_display = ('nomProjet', 'nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 admin.site.register(domaine)
@@ -36,3 +36,6 @@ class ClientAdmin(admin.ModelAdmin):
     search_fields = ['nomClient']
     list_filter = ('domaineClient',)
 admin.site.register(client,ClientAdmin)
+admin.site.register(BU)
+admin.site.register(gestionManagerialeProjet)
+admin.site.register(gestionCommercialeProjet)

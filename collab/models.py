@@ -93,12 +93,44 @@ class experiences(models.Model):
         return "/consultant/%i/" % collab
     class Meta: 
         verbose_name = 'Intervention'
+#BU
+class BU(models.Model):
+    nomBU = models.CharField(max_length=250)
+    def __str__(self):
+        return self.nomBU
+    class Meta: 
+        verbose_name = 'Business Unit'
+#Gestion Managériale Projet
+class gestionManagerialeProjet(models.Model):
+    dateDebut = models.DateField('date de début de la gestion du Projet', null=True)
+    dateFin = models.DateField('date de fin de la gestion du Projet', blank=True, null=True)
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return str('%s %s' %(self.dateDebut, self.manager))
+
+#Gestion Commerciale Projet
+class gestionCommercialeProjet(models.Model):
+    dateDebut = models.DateField('date de début de la gestion commerciale du Projet', null=True)
+    dateFin = models.DateField('date de fin de la gestion commerciale du Projet', blank=True, null=True)
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return str('%s %s' %(self.dateDebut, self.manager))
 
 #Projet (un projet peut englober plusieurs Expériences par exemple projet SAPHIR)
 class projet(models.Model):
     nomProjet = models.CharField(max_length=300)
+    resumeProjet = models.TextField(default='')
+    client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
+    budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0)
     nbJourHomme = models.IntegerField()
+    livrables = models.TextField(default='')
+    benefClient = models.TextField(default='')
     contexteMission = models.TextField(default='')
+    dateDebut = models.DateField('date de début du Projet', null=True)
+    dateFin = models.DateField('date de fin du Projet', blank=True, null=True)
+    BUProjet = models.ForeignKey(BU, on_delete=models.SET_NULL, null=True)
+    gestionManageriale = models.ManyToManyField(gestionManagerialeProjet)
+    gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet)
     experiencesLiees = models.ManyToManyField(experiences)
     def __str__(self):
         return self.nomProjet
@@ -115,8 +147,8 @@ class langue(models.Model):
         ('C1','Avancé'),
         ('C2','Courant'),
     )
-    niveauLangue = models.CharField(max_length=1, choices=NIVEAU_LANGUE, default='A0')
+    niveauLangue = models.CharField(max_length=2, choices=NIVEAU_LANGUE, default='A0')
     def __str__(self):
         return self.nomProjet
 
-#BU
+
