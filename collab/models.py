@@ -41,30 +41,88 @@ class competences(models.Model):
     def __str__(self):
         return self.nomCompetence
 
+#Gestion Managériale Consultant
+class gestionManagerialeConsultant(models.Model):
+    dateDebut = models.DateField('date de début de la gestion du consultant', null=True)
+    dateFin = models.DateField('date de fin de la gestion du consultant', blank=True, null=True)
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return str('%s %s' %(self.dateDebut, self.manager))
 
+#Table pour Expertise Sectorielle
+class expertiseSectorielle(models.Model):
+    nom = models.CharField(max_length=500)
+    def __str__(self):
+        return self.nom
+
+#Formation et Certification
+class formation(models.Model):
+    diplome = models.CharField(max_length=500)
+    ecole = models.CharField(max_length=500)
+    def __str__(self):
+        return str('%s %s' %(self.diplome, self.ecole))
+
+#Obtention Formation
+class obtentionFormation(models.Model):
+    dateObtention = models.DateField('date d\'obtention du diplome ou certification', null=True)
+    formation = models.ForeignKey(formation, on_delete=models.SET_NULL, null=True)
+    def __str__(self):
+        return str('%s %s' %(self.dateObtention, self.formation))
+
+#Niveaux d'interventions
+class niveauIntervention(models.Model):
+    libelle = models.CharField(max_length=500)
+    def __str__(self):
+        return self.libelle
+#Langues
+class LanguesParlee(models.Model):
+    nom = models.CharField(max_length=500)
+    NIVEAU_LANGUE = (
+        ('D', 'Debutant'),
+        ('C','Courant'),
+        ('B', 'Bilingue'),
+    )
+    niveau = models.CharField(max_length=1, choices=NIVEAU_LANGUE, default='D')
+    def __str__(self):
+        return str('%s %s' %(self.nom, self.niveau))
 
 #Collaborateur
 class collaborateurs(models.Model):
     nomCollaborateur = models.CharField(max_length=200)
     prenomCollaborateur = models.CharField(max_length=200)
     titreCollaborateur = models.CharField(max_length=200)
+    dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
     texteIntroductifCv = models.TextField(default='')
     nbAnneeExperience = models.IntegerField()
     codePostal = models.CharField(default='',max_length=200)
     telephone = models.CharField(default='',max_length=200)
     mail = models.CharField(default='',max_length=200)
-    manager = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    manager = models.ManyToManyField(gestionManagerialeConsultant)
     TYPE_CONTRAT = (
         ('I', 'Interne'),
         ('E', 'Externe'),
     )
     typeContrat = models.CharField(max_length=1, choices=TYPE_CONTRAT, default='I')
-    tjm=models.DecimalField(decimal_places=2,max_digits=6, default=0.0)
+    GRADE = (
+        ('1', 'Consultant Junior'),
+        ('2', 'Consultant'),
+    )
+    grade = models.CharField(max_length=1, choices=GRADE, default='1')
+    dateArrivee = models.DateField('date d\'arrivée chez Themis', null=True)
+    dateSortie = models.DateField('date de sortie de chez Themis', blank=True, null=True)
+    expertiseSectorielle = models.ManyToManyField(expertiseSectorielle)
+    niveauxIntervention = models.ManyToManyField(niveauIntervention)
+    expSignificative1= models.CharField(max_length=500, blank=True, null=True)
+    expSignificative2= models.CharField(max_length=500, blank=True, null=True)
+    expSignificative3= models.CharField(max_length=500, blank=True, null=True)
+    expSignificative4= models.CharField(max_length=500, blank=True, null=True)
+    expSignificative5= models.CharField(max_length=500, blank=True, null=True)
+    clientPrincipaux = models.ManyToManyField(client)
     listeCompetencesCles = models.ManyToManyField(competences)
-    formation = models.TextField()
+    formation = models.ManyToManyField(obtentionFormation)
     parcours = models.TextField()
     methodologie = models.TextField()
-    langues = models.TextField()
+    langues = models.ManyToManyField(LanguesParlee)
     outilsCollaborateur = models.ManyToManyField(outils)
     estEnIntercontrat = models.BooleanField(default=False)
     def __str__(self):
