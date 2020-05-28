@@ -193,20 +193,3 @@ class projet(models.Model):
     def __str__(self):
         return self.nomProjet
 
-#Langues
-class langue(models.Model):
-    nomLangue = models.CharField(max_length=500)
-    NIVEAU_LANGUE = (
-        ('A0', 'Débutant'),
-        ('A1', 'Élémentaire'),
-        ('A2','Pré-intermédiaire'),
-        ('B1','Intermédiaire'),
-        ('B2','Intermédiaire supérieur'),
-        ('C1','Avancé'),
-        ('C2','Courant'),
-    )
-    niveauLangue = models.CharField(max_length=2, choices=NIVEAU_LANGUE, default='A0')
-    def __str__(self):
-        return self.nomProjet
-
-
