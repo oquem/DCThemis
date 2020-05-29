@@ -44,7 +44,10 @@ class gestionCommercialeProjetAdmin(admin.ModelAdmin):
     search_fields = ['manager']
     list_filter = ('manager','dateDebut','dateFin')
 admin.site.register(gestionCommercialeProjet, gestionCommercialeProjetAdmin)
-admin.site.register(gestionManagerialeConsultant)
+class gestionManagerialeConsultantAdmin(admin.ModelAdmin):
+    search_fields = ['manager']
+    list_filter = ('manager','dateDebut','dateFin')
+admin.site.register(gestionManagerialeConsultant, gestionManagerialeConsultantAdmin)
 admin.site.register(expertiseSectorielle)
 class FormationAdmin(admin.ModelAdmin):
     search_fields = ['diplome','ecole']
