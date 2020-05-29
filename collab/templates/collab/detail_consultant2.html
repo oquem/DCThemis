@@ -27,8 +27,8 @@
                         <h3 class="panel-title">Compétences </h3></div>
                     <div class="panel-body">
                         <ul>
-                            {% for compe in collab.listeCompetencesCles.all %}
-                            <li>{{compe}}</li>
+                            {% for niv in collab.niveauxIntervention.all %}
+                            <li>{{niv}}</li>
                             {% empty %}
                             empty list!
                             {% endfor %}
@@ -41,15 +41,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Niveau d'intervention</h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_niveau_inter_consult %}
                         <ul>
-                            {% for elt in liste %}
+                            {% for compe in collab.listeCompetencesCles.all %}
                             <li>{{elt}}</li>
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
@@ -58,15 +54,13 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Clients </h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_client_par_consultant %}
                         <ul>
-                            {% for elt in liste %}
-                            <li>{{elt}}</li>
+                            {% for cli in collab.clientPrincipaux.all %}
+                            <li>{{cli}}</li>
+                            {% empty %}
+                            empty list!
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
@@ -75,15 +69,13 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Secteur </h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_secteur_consultant %}
                         <ul>
-                            {% for elt in liste %}
-                            <li>{{elt}}</li>
+                            {% for sec in collab.expertiseSectorielle.all %}
+                            <li>{{sec}}</li>
+                            {% empty %}
+                            empty list!
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
