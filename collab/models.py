@@ -108,11 +108,10 @@ class collaborateurs(models.Model):
     )
     typeContrat = models.CharField(max_length=1, choices=TYPE_CONTRAT, default='I')
     GRADE = (
-        ('1', 'Consultant'),
-        ('2', 'Manager'),
-        ('3', 'Responsable Commercial'),
-        ('4', 'Chargé de Recrutement'),
-        ('5', 'Directeur'),
+        ('1', 'Junior'),
+        ('2', 'Confirmé'),
+        ('3', 'Sénior'),
+        ('4', 'Expert'),
     )
     grade = models.CharField(max_length=1, choices=GRADE, default='1')
     dateArrivee = models.DateField('date d\'arrivée chez Themis', null=True)
