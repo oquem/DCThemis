@@ -3,6 +3,11 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+def get_display(key, list):
+    d = dict(list)
+    if key in d:
+        return d[key]
+    return None
 #Clients
 class client(models.Model):
     nomClient = models.CharField(max_length=250)
@@ -60,6 +65,8 @@ class client(models.Model):
     )
     domaineClient = models.CharField(max_length=2, choices=SECTEUR, default='1')
     logoClient = models.ImageField(upload_to='collab/static/collab', blank=True, null=True)
+    def domaineClient_verbose(self):
+        return get_display(self.domaineClient, SECTEUR)  
     def __str__(self):
         return self.nomClient
 

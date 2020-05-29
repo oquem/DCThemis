@@ -12,44 +12,6 @@ def statut_consultant(id_collab):
         return "Oui"
     else:
         return "Non"
-#Recup liste des clients de chaque consultant
-#@register.filter(name='liste_client_par_consultant')
-#def liste_client_par_consultant(id_consultant):
-#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-#    liste_client=[]
-#    for expe in liste_expe:
-#        nom_client = expe.client
-#        if nom_client in liste_client:
-#            pass
-#        else:
-#           liste_client.append(nom_client) 
-#    return liste_client
-
-# Définir les niveaux d'intervention d'un consultant
-#@register.filter(name='liste_niveau_inter_consult')
-#def liste_niveau_inter_consult(id_consultant):
-#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-#    liste_niv=[]
-#    for expe in liste_expe:
-#        niveau = expe.niveauIntervention
-#        if niveau in liste_niv:
-#            pass
-#        else:
-#           liste_niv.append(niveau) 
-#    return liste_niv
-
-#définir les secteurs d'un consultant
-#@register.filter(name='liste_secteur_consultant')
-#def liste_secteur_consultant(id_consultant):
-#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-#    liste_secteur=[]
-#    for expe in liste_expe:
-#        secteur = expe.client.domaineClient
-#        if secteur in liste_secteur:
-#            pass
-#        else:
-#           liste_secteur.append(secteur) 
-#    return liste_secteur
 
 #recup contexte projet d'une mission
 @register.filter(name='contexte_projet')
@@ -57,6 +19,36 @@ def contexte_projet(id_mission):
     projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
     contexte_mission = projet_de_la_mission.contexteMission
     return contexte_mission
+
+#recup livrables projet d'une mission
+@register.filter(name='livrable_projet')
+def livrable_projet(id_mission):
+    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    contexte_mission = projet_de_la_mission.livrables
+    return contexte_mission
+
+#recup benef projet d'une mission
+@register.filter(name='benef_projet')
+def benef_projet(id_mission):
+    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    contexte_mission = projet_de_la_mission.benefClient
+    return contexte_mission
+
+#recup client d'une mission
+@register.filter(name='recup_client_mission')
+def recup_client_mission(id_mission):
+    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    client = projet_de_la_mission.client
+    return client
+
+#recup Secteur d'un client d'une mission
+@register.filter(name='recup_client_secteur')
+def recup_client_secteur(id_mission):
+    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    client = projet_de_la_mission.client
+    secteur = client.domaineClient
+    return secteur
+
 #Calcul du nombre de consultant par outil
 @register.filter(name='nb_consultant_outil')
 def nb_consultant_outil(id_outil):

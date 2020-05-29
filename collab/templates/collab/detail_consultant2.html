@@ -133,19 +133,24 @@
         {% if mission_du_collab %}
         {% for mission in mission_du_collab %}
         {% with "/admin/collab/experiences/"|addstr:mission.pk|addstr:"/change/" as urlModif %}
+        {% with idmission=mission.pk %}
         <div class="row">
             <div class="col-md-12 colonne_xp">
                 {% if mission.dateFin == None %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}} - En cours (9 mois)</h3>
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
                 {% else %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}}/{{mission.dateFin}} (9 mois)</h3>
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
                 {% endif %}
-                <p><strong>{% with idmission=mission.pk %}{% with contexte=idmission|contexte_projet %}{{contexte}}{% endwith %}{% endwith %}</strong> </p>
+                <p><strong>{% with contexte=idmission|contexte_projet %}{{contexte}}{% endwith %}</strong> </p>
+                <p><strong>Resume :</strong> {{mission.resumeIntervention}} </p>
                 <p><strong>Descriptif :</strong> {{mission.descriptifMission}} </p>
+                <p><strong>Livrables :</strong> {% with livrable=idmission|livrable_projet %}{{livrable}}{% endwith %}</p>
+                <p><strong>Benefice client :</strong> {% with benef=idmission|benef_projet %}{{benef}}{% endwith %}</p>
                 <p><strong>Environnement :</strong> {{mission.environnementMission}} </p>
                 <a class="btn btn-primary bouton_modif_expe" role="button" href={{urlModif}} target="_blank">Modifier </a>
             </div>
         </div>
+        {% endwith %}
         {% endwith %}
         {% endfor %}
         {% else %}
