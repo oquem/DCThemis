@@ -40,7 +40,10 @@ admin.site.register(gestionManagerialeProjet)
 admin.site.register(gestionCommercialeProjet)
 admin.site.register(gestionManagerialeConsultant)
 admin.site.register(expertiseSectorielle)
-admin.site.register(formation)
+class FormationAdmin(admin.ModelAdmin):
+    search_fields = ['diplome','ecole']
+    list_filter = ('ecole','diplome')
+admin.site.register(formation, FormationAdmin)
 admin.site.register(obtentionFormation)
 admin.site.register(niveauIntervention)
 admin.site.register(LanguesParlee)
