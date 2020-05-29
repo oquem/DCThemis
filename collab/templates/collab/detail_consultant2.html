@@ -25,15 +25,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Compétences </h3></div>
-                    <div class="panel-body">
-                        <ul>
-                            {% for niv in collab.niveauxIntervention.all %}
-                            <li>{{niv}}</li>
-                            {% empty %}
-                            empty list!
-                            {% endfor %}
-                        </ul>
-                    </div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for compe in collab.listeCompetencesCles.all %}
+                                <li>{{compe}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3">
@@ -42,8 +40,8 @@
                         <h3 class="panel-title">Niveau d'intervention</h3></div>
                     <div class="panel-body">
                         <ul>
-                            {% for compe in collab.listeCompetencesCles.all %}
-                            <li>{{elt}}</li>
+                            {% for niv in collab.niveauxIntervention.all %}
+                            <li>{{niv}}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -57,8 +55,6 @@
                         <ul>
                             {% for cli in collab.clientPrincipaux.all %}
                             <li>{{cli}}</li>
-                            {% empty %}
-                            empty list!
                             {% endfor %}
                         </ul>
                     </div>
@@ -72,8 +68,6 @@
                         <ul>
                             {% for sec in collab.expertiseSectorielle.all %}
                             <li>{{sec}}</li>
-                            {% empty %}
-                            empty list!
                             {% endfor %}
                         </ul>
                     </div>
