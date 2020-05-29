@@ -124,11 +124,11 @@ class niveauIntervention(models.Model):
 class LanguesParlee(models.Model):
     nom = models.CharField(max_length=500)
     NIVEAU_LANGUE = (
-        ('D', 'Debutant'),
-        ('C','Courant'),
-        ('B', 'Bilingue'),
+        ('Debutant', 'Debutant'),
+        ('Courant','Courant'),
+        ('Bilingue', 'Bilingue'),
     )
-    niveau = models.CharField(max_length=1, choices=NIVEAU_LANGUE, default='D')
+    niveau = models.CharField(max_length=10, choices=NIVEAU_LANGUE, default='Debutant')
     def __str__(self):
         return str('%s %s' %(self.nom, self.niveau))
 
