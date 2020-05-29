@@ -2,6 +2,7 @@ from django import template
 from collab.models import outils, collaborateurs, competences, client, experiences, projet
 import datetime
 from django.shortcuts import get_object_or_404
+import datetime
 register = template.Library()
 
 #Definir statut consultant
@@ -64,28 +65,48 @@ def nb_consultant_compe(id_compe):
 #Calcul du nombre de missions totales par client
 @register.filter(name='recup_mission')
 def recup_mission(id_client):
-    nb = experiences.objects.filter(client=id_client).count()
+    projetsDuClient = projet.objects.filter(client=id_client)
+    nb=0
+    for elt in projetsDuClient:
+        missions = elt.experiencesLiees.all()
+        for x in missions:
+            nb+=1
     return nb
 
 #Calcul du nombre de missions en cours par client
-#@register.filter(name='recup_mission_en_cours')
-#def recup_mission_en_cours(id_client):
-#    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
-#    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
-#    nb3=nb+nb2
-#    return nb3
+@register.filter(name='recup_mission_en_cours')
+def recup_mission_en_cours(id_client):
+    projetsDuClient = projet.objects.filter(client=id_client)
+    nb=0
+    for elt in projetsDuClient:
+        missions = elt.experiencesLiees.all()
+        for x in missions:
+            date_fin=x.dateFin
+            if date_fin == None:
+                nb+=1
+            elif date_fin > datetime.date.today():
+                nb+=1
+            else:
+                continue
+    return nb
 
 #Definir statut client
-#@register.filter(name='statut_client')
-#def statut_client(id_client):
-#    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
-#    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
-#    if nb > 0:
-#        return "Oui"
-#    elif nb2 > 0:
-#        return "Oui"
-#    else:
-#        return "Non"
+@register.filter(name='statut_client')
+def statut_client(id_client):
+    projetsDuClient = projet.objects.filter(client=id_client)
+    for elt in projetsDuClient:
+        missions = elt.experiencesLiees.all()
+        for x in missions:
+            date_fin=x.dateFin
+            if date_fin == None:
+                statut = "Actif"
+                break
+            elif date_fin > datetime.date.today():
+                statut = "Actif"
+                break
+            else:
+                statut = "Inactif"
+    return statut       
 
 #Ajouter deux string
 @register.filter

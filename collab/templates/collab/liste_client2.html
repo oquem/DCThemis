@@ -18,14 +18,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for client in clients %}
-                            {% with truc=client.pk %}
+                            {% for cli in clients %}
+                            {% with truc=cli.pk %}
                             <tr>
-                                <td>{{client.nomClient}} </td>
-                                <td class="hidden-xs hidden-sm">{{client.domaineClient}} </td>
+                                <td>{{cli.nomClient}} </td>
+                                <td class="hidden-xs hidden-sm">{{cli.domaineClient}} </td>
                                 <td>{{truc|recup_mission}} </td>
                                 <td>{{truc|recup_mission_en_cours}} </td>
-                                <td class="hidden-xs hidden-sm">{{truc|statut_client}}</td>
+                               <td class="hidden-xs hidden-sm">{{truc|statut_client}}</td>
                             </tr>
                             {% endwith %}
                             {% endfor %}
