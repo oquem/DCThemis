@@ -17,7 +17,7 @@ admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
 class CollabAdmin(admin.ModelAdmin):
     search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence']
-    list_filter = ('estEnIntercontrat','nbAnneeExperience','manager','typeContrat')
+    list_filter = ('estEnIntercontrat','nbAnneeExperience','manager__manager','typeContrat')
     list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
