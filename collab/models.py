@@ -99,8 +99,12 @@ class collaborateurs(models.Model):
     mail = models.CharField(default='',max_length=200)
     manager = models.ManyToManyField(gestionManagerialeConsultant)
     TYPE_CONTRAT = (
-        ('I', 'Interne'),
-        ('E', 'Externe'),
+        ('I', 'CDI'),
+        ('D', 'CDD'),
+        ('N', 'Intérimaire'),
+        ('A', 'Contrat d\'alternance'),
+        ('X', 'Indépendant'),
+        ('S', 'Sous-traitant'),
     )
     typeContrat = models.CharField(max_length=1, choices=TYPE_CONTRAT, default='I')
     GRADE = (
