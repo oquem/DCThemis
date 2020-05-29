@@ -36,7 +36,10 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ('domaineClient',)
 admin.site.register(client,ClientAdmin)
 admin.site.register(BU)
-admin.site.register(gestionManagerialeProjet)
+class gestionManagerialeProjetAdmin(admin.ModelAdmin):
+    search_fields = ['manager']
+    list_filter = ('manager','dateDebut','dateFin')
+admin.site.register(gestionManagerialeProjet, gestionManagerialeProjetAdmin)
 class gestionCommercialeProjetAdmin(admin.ModelAdmin):
     search_fields = ['manager']
     list_filter = ('manager','dateDebut','dateFin')
