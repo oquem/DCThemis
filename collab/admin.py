@@ -22,8 +22,8 @@ class CollabAdmin(admin.ModelAdmin):
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
-    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur']
-    list_filter = ('employeurIntervention','collaborateurMission__nomCollaborateur')
+    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','employeurIntervention','service']
+    list_filter = ('employeurIntervention','collaborateurMission__nomCollaborateur','mandataire')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
