@@ -45,8 +45,8 @@ def recup_client_mission(id_mission):
 @register.filter(name='recup_client_secteur')
 def recup_client_secteur(id_mission):
     projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
-    client = projet_de_la_mission.client
-    secteur = client.domaineClient
+    client_pk = projet_de_la_mission.client.pk
+    secteur = get_object_or_404(client, pk=client_pk).get_domaineClient_display()
     return secteur
 
 #Calcul du nombre de consultant par outil
