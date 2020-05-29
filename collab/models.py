@@ -1,67 +1,9 @@
 from django.db import models
 from django.forms import ModelForm
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 #Clients
-class domaine(models.Model):
-    SECTEUR = (
-        ('1','Activités immobilières '),
-        ('2','Agriculture'),
-        ('3','Agroalimentaire'),
-        ('4','Armée, sécurité'),
-        ('5','Art, Design'),
-        ('6','Assurance'),
-        ('7','Audiovisuel, Spectacle, Cinéma'),
-        ('8','Audit, Études et conseils, Expertise'),
-        ('9','Automobile et  réparation automobile '),
-        ('10','Banque'),
-        ('11','Bois / Papier / Carton'),
-        ('12','BTP, Architecture'),
-        ('13','Chimie / Parachimie'),
-        ('14','Commerce / Négoce'),
-        ('15','Commerce du jeu '),
-        ('16','Construction aéronautique, ferroviaire et navale'),
-        ('17','Culture, Artisanat d\'art'),
-        ('18','Distribution'),
-        ('19','Droit, justice'),
-        ('20','e-commerce'),
-        ('21','Édition / imprimerie / reproduction / Communication / Multimédia'),
-        ('22','Edition, Journalisme'),
-        ('23','Électricité'),
-        ('24','Electronique, Electrotechnique'),
-        ('25','Energie'),
-        ('26','Enseignement et éducation '),
-        ('27','Environnement'),
-        ('28','Fonction publique'),
-        ('29','Hôtellerie , Café, Tabac et Restauration'),
-        ('30','Imprimerie'),
-        ('31','Industrie du tabac '),
-        ('32','Industrie pharmaceutique'),
-        ('33','Informatique, Numérique et Réseaux'),
-        ('34','Logistique'),
-        ('35','Machines et équipements'),
-        ('36','Maintenance, entretien'),
-        ('37','Marketing, publicité, Communication'),
-        ('38','Matériaux de construction, , Transformations'),
-        ('39','Métallurgie'),
-        ('40','Mode / Textile / Habillement / Chaussure'),
-        ('41','Plastique / Caoutchouc'),
-        ('42','Poste et télécommunications '),
-        ('43','Recherche et développement '),
-        ('44','Récupération '),
-        ('45','Santé, médical'),
-        ('46','Services aux entreprises'),
-        ('47','Social, Services à la personne'),
-        ('48','Sport et loisirs'),
-        ('49','Tourisme'),
-        ('50','Transports')
-    )
-    nomDomaine = models.CharField(max_length=2, choices=SECTEUR, default='1')
-    def __str__(self):
-        return self.nomDomaine
-    class Meta: 
-        verbose_name = 'Secteur Client'
-
 class client(models.Model):
     nomClient = models.CharField(max_length=250)
     SECTEUR = (
@@ -245,14 +187,15 @@ class collaborateurs(models.Model):
 #Experiences
 class experiences(models.Model):
     nomMission = models.CharField(max_length=300)
-    niveauIntervention = models.CharField(max_length=300, default="")
-    client = models.ForeignKey(client, on_delete=models.CASCADE)
     dateDebut = models.DateField('date de début de mission')
     dateFin = models.DateField('date de fin de mission', blank=True, null=True)
-    nbJourHomme = models.IntegerField()
-    contexteMission = models.TextField(default='')
-    descriptifMission = models.TextField()
-    environnementMission =  models.TextField()
+    employeurIntervention = models.CharField(max_length=300,default='')
+    mandataire = models.CharField(max_length=300,default='')
+    service = models.CharField(max_length=300,default='')
+    resumeIntervention = models.TextField(default='')
+    descriptifMission = models.TextField(default='')
+    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)])
+    environnementMission =  models.TextField(default='')
     collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='')
     def __str__(self):
         return self.nomMission
@@ -302,4 +245,3 @@ class projet(models.Model):
     experiencesLiees = models.ManyToManyField(experiences)
     def __str__(self):
         return self.nomProjet
-

@@ -13,42 +13,44 @@ def statut_consultant(id_collab):
     else:
         return "Non"
 #Recup liste des clients de chaque consultant
-@register.filter(name='liste_client_par_consultant')
-def liste_client_par_consultant(id_consultant):
-    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-    liste_client=[]
-    for expe in liste_expe:
-        nom_client = expe.client
-        if nom_client in liste_client:
-            pass
-        else:
-           liste_client.append(nom_client) 
-    return liste_client
+#@register.filter(name='liste_client_par_consultant')
+#def liste_client_par_consultant(id_consultant):
+#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
+#    liste_client=[]
+#    for expe in liste_expe:
+#        nom_client = expe.client
+#        if nom_client in liste_client:
+#            pass
+#        else:
+#           liste_client.append(nom_client) 
+#    return liste_client
+
 # Définir les niveaux d'intervention d'un consultant
-@register.filter(name='liste_niveau_inter_consult')
-def liste_niveau_inter_consult(id_consultant):
-    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-    liste_niv=[]
-    for expe in liste_expe:
-        niveau = expe.niveauIntervention
-        if niveau in liste_niv:
-            pass
-        else:
-           liste_niv.append(niveau) 
-    return liste_niv
+#@register.filter(name='liste_niveau_inter_consult')
+#def liste_niveau_inter_consult(id_consultant):
+#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
+#    liste_niv=[]
+#    for expe in liste_expe:
+#        niveau = expe.niveauIntervention
+#        if niveau in liste_niv:
+#            pass
+#        else:
+#           liste_niv.append(niveau) 
+#    return liste_niv
 
 #définir les secteurs d'un consultant
-@register.filter(name='liste_secteur_consultant')
-def liste_secteur_consultant(id_consultant):
-    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
-    liste_secteur=[]
-    for expe in liste_expe:
-        secteur = expe.client.domaineClient
-        if secteur in liste_secteur:
-            pass
-        else:
-           liste_secteur.append(secteur) 
-    return liste_secteur
+#@register.filter(name='liste_secteur_consultant')
+#def liste_secteur_consultant(id_consultant):
+#    liste_expe = experiences.objects.filter(collaborateurMission=id_consultant)
+#    liste_secteur=[]
+#    for expe in liste_expe:
+#        secteur = expe.client.domaineClient
+#        if secteur in liste_secteur:
+#            pass
+#        else:
+#           liste_secteur.append(secteur) 
+#    return liste_secteur
+
 #recup contexte projet d'une mission
 @register.filter(name='contexte_projet')
 def contexte_projet(id_mission):
@@ -74,24 +76,24 @@ def recup_mission(id_client):
     return nb
 
 #Calcul du nombre de missions en cours par client
-@register.filter(name='recup_mission_en_cours')
-def recup_mission_en_cours(id_client):
-    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
-    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
-    nb3=nb+nb2
-    return nb3
+#@register.filter(name='recup_mission_en_cours')
+#def recup_mission_en_cours(id_client):
+#    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
+#    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
+#    nb3=nb+nb2
+#    return nb3
 
 #Definir statut client
-@register.filter(name='statut_client')
-def statut_client(id_client):
-    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
-    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
-    if nb > 0:
-        return "Oui"
-    elif nb2 > 0:
-        return "Oui"
-    else:
-        return "Non"
+#@register.filter(name='statut_client')
+#def statut_client(id_client):
+#    nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=id_client).count()
+#    nb2 = experiences.objects.filter(dateFin=None,client=id_client).count()
+#    if nb > 0:
+#        return "Oui"
+#    elif nb2 > 0:
+#        return "Oui"
+#    else:
+#        return "Non"
 
 #Ajouter deux string
 @register.filter
