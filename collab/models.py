@@ -4,7 +4,59 @@ from django.conf import settings
 
 #Clients
 class domaine(models.Model):
-    nomDomaine = models.CharField(max_length=300)
+    SECTEUR = (
+        ('1','Activités immobilières '),
+        ('2','Agriculture'),
+        ('3','Agroalimentaire'),
+        ('4','Armée, sécurité'),
+        ('5','Art, Design'),
+        ('6','Assurance'),
+        ('7','Audiovisuel, Spectacle, Cinéma'),
+        ('8','Audit, Études et conseils, Expertise'),
+        ('9','Automobile et  réparation automobile '),
+        ('10','Banque'),
+        ('11','Bois / Papier / Carton'),
+        ('12','BTP, Architecture'),
+        ('13','Chimie / Parachimie'),
+        ('14','Commerce / Négoce'),
+        ('15','Commerce du jeu '),
+        ('16','Construction aéronautique, ferroviaire et navale'),
+        ('17','Culture, Artisanat d\'art'),
+        ('18','Distribution'),
+        ('19','Droit, justice'),
+        ('20','e-commerce'),
+        ('21','Édition / imprimerie / reproduction / Communication / Multimédia'),
+        ('22','Edition, Journalisme'),
+        ('23','Électricité'),
+        ('24','Electronique, Electrotechnique'),
+        ('25','Energie'),
+        ('26','Enseignement et éducation '),
+        ('27','Environnement'),
+        ('28','Fonction publique'),
+        ('29','Hôtellerie , Café, Tabac et Restauration'),
+        ('30','Imprimerie'),
+        ('31','Industrie du tabac '),
+        ('32','Industrie pharmaceutique'),
+        ('33','Informatique, Numérique et Réseaux'),
+        ('34','Logistique'),
+        ('35','Machines et équipements'),
+        ('36','Maintenance, entretien'),
+        ('37','Marketing, publicité, Communication'),
+        ('38','Matériaux de construction, , Transformations'),
+        ('39','Métallurgie'),
+        ('40','Mode / Textile / Habillement / Chaussure'),
+        ('41','Plastique / Caoutchouc'),
+        ('42','Poste et télécommunications '),
+        ('43','Recherche et développement '),
+        ('44','Récupération '),
+        ('45','Santé, médical'),
+        ('46','Services aux entreprises'),
+        ('47','Social, Services à la personne'),
+        ('48','Sport et loisirs'),
+        ('49','Tourisme'),
+        ('50','Transports')
+    )
+    nomDomaine = models.CharField(max_length=2, choices=SECTEUR, default='1')
     def __str__(self):
         return self.nomDomaine
     class Meta: 
@@ -12,7 +64,59 @@ class domaine(models.Model):
 
 class client(models.Model):
     nomClient = models.CharField(max_length=250)
-    domaineClient = models.ForeignKey(domaine, on_delete=models.CASCADE)
+    SECTEUR = (
+        ('1','Activités immobilières '),
+        ('2','Agriculture'),
+        ('3','Agroalimentaire'),
+        ('4','Armée, sécurité'),
+        ('5','Art, Design'),
+        ('6','Assurance'),
+        ('7','Audiovisuel, Spectacle, Cinéma'),
+        ('8','Audit, Études et conseils, Expertise'),
+        ('9','Automobile et  réparation automobile '),
+        ('10','Banque'),
+        ('11','Bois / Papier / Carton'),
+        ('12','BTP, Architecture'),
+        ('13','Chimie / Parachimie'),
+        ('14','Commerce / Négoce'),
+        ('15','Commerce du jeu '),
+        ('16','Construction aéronautique, ferroviaire et navale'),
+        ('17','Culture, Artisanat d\'art'),
+        ('18','Distribution'),
+        ('19','Droit, justice'),
+        ('20','e-commerce'),
+        ('21','Édition / imprimerie / reproduction / Communication / Multimédia'),
+        ('22','Edition, Journalisme'),
+        ('23','Électricité'),
+        ('24','Electronique, Electrotechnique'),
+        ('25','Energie'),
+        ('26','Enseignement et éducation '),
+        ('27','Environnement'),
+        ('28','Fonction publique'),
+        ('29','Hôtellerie , Café, Tabac et Restauration'),
+        ('30','Imprimerie'),
+        ('31','Industrie du tabac '),
+        ('32','Industrie pharmaceutique'),
+        ('33','Informatique, Numérique et Réseaux'),
+        ('34','Logistique'),
+        ('35','Machines et équipements'),
+        ('36','Maintenance, entretien'),
+        ('37','Marketing, publicité, Communication'),
+        ('38','Matériaux de construction, , Transformations'),
+        ('39','Métallurgie'),
+        ('40','Mode / Textile / Habillement / Chaussure'),
+        ('41','Plastique / Caoutchouc'),
+        ('42','Poste et télécommunications '),
+        ('43','Recherche et développement '),
+        ('44','Récupération '),
+        ('45','Santé, médical'),
+        ('46','Services aux entreprises'),
+        ('47','Social, Services à la personne'),
+        ('48','Sport et loisirs'),
+        ('49','Tourisme'),
+        ('50','Transports')
+    )
+    domaineClient = models.CharField(max_length=2, choices=SECTEUR, default='1')
     logoClient = models.ImageField(upload_to='collab/static/collab', blank=True, null=True)
     def __str__(self):
         return self.nomClient
