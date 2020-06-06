@@ -94,18 +94,21 @@ def recup_mission_en_cours(id_client):
 @register.filter(name='statut_client')
 def statut_client(id_client):
     projetsDuClient = projet.objects.filter(client=id_client)
-    for elt in projetsDuClient:
-        missions = elt.experiencesLiees.all()
-        for x in missions:
-            date_fin=x.dateFin
-            if date_fin == None:
-                statut = "Actif"
-                break
-            elif date_fin > datetime.date.today():
-                statut = "Actif"
-                break
-            else:
-                statut = "Inactif"
+    if not projetsDuClient:
+        statut="Inactif"
+    else:
+        for elt in projetsDuClient:
+            missions = elt.experiencesLiees.all()
+            for x in missions:
+                date_fin=x.dateFin
+                if date_fin == None:
+                    statut = "Actif"
+                    break
+                elif date_fin > datetime.date.today():
+                    statut = "Actif"
+                    break
+                else:
+                    statut = "Inactif"
     return statut       
 
 #Ajouter deux string
