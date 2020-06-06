@@ -25,15 +25,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Compétences </h3></div>
-                    <div class="panel-body">
-                        <ul>
-                            {% for compe in collab.listeCompetencesCles.all %}
-                            <li>{{compe}}</li>
-                            {% empty %}
-                            empty list!
-                            {% endfor %}
-                        </ul>
-                    </div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for compe in collab.listeCompetencesCles.all %}
+                                <li>{{compe}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3">
@@ -41,15 +39,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Niveau d'intervention</h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_niveau_inter_consult %}
                         <ul>
-                            {% for elt in liste %}
-                            <li>{{elt}}</li>
+                            {% for niv in collab.niveauxIntervention.all %}
+                            <li>{{niv}}</li>
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
@@ -58,15 +52,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Clients </h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_client_par_consultant %}
                         <ul>
-                            {% for elt in liste %}
-                            <li>{{elt}}</li>
+                            {% for cli in collab.clientPrincipaux.all %}
+                            <li>{{cli}}</li>
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
@@ -75,15 +65,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Secteur </h3></div>
                     <div class="panel-body">
-                        {% with truc=collab.pk %}
-                        {% with liste=truc|liste_secteur_consultant %}
                         <ul>
-                            {% for elt in liste %}
-                            <li>{{elt}}</li>
+                            {% for sec in collab.expertiseSectorielle.all %}
+                            <li>{{sec}}</li>
                             {% endfor %}
                         </ul>
-                        {% endwith %}
-                        {% endwith %}
                     </div>
                 </div>
             </div>
@@ -93,9 +79,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Formation </h3></div>
-                    <div class="panel-body">
-                        <p>{{collab.formation}}</p>
-                    </div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for form in collab.formation.all %}
+                                <li>{{form}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-3">
@@ -126,9 +116,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Langues </h3></div>
-                    <div class="panel-body">
-                        <p>{{collab.langues}}</p>
-                    </div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for lan in collab.langues.all %}
+                                <li>{{lan}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                 </div>
             </div>
         </div>
@@ -139,19 +133,24 @@
         {% if mission_du_collab %}
         {% for mission in mission_du_collab %}
         {% with "/admin/collab/experiences/"|addstr:mission.pk|addstr:"/change/" as urlModif %}
+        {% with idmission=mission.pk %}
         <div class="row">
             <div class="col-md-12 colonne_xp">
                 {% if mission.dateFin == None %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}} - En cours (9 mois)</h3>
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
                 {% else %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {{mission.client}} ( {{mission.client.domaineClient}} ) - {{mission.dateDebut}}/{{mission.dateFin}} (9 mois)</h3>
+                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
                 {% endif %}
-                <p><strong>{% with idmission=mission.pk %}{% with contexte=idmission|contexte_projet %}{{contexte}}{% endwith %}{% endwith %}</strong> </p>
+                <p><strong>{% with contexte=idmission|contexte_projet %}{{contexte}}{% endwith %}</strong> </p>
+                <p><strong>Resume :</strong> {{mission.resumeIntervention}} </p>
                 <p><strong>Descriptif :</strong> {{mission.descriptifMission}} </p>
+                <p><strong>Livrables :</strong> {% with livrable=idmission|livrable_projet %}{{livrable}}{% endwith %}</p>
+                <p><strong>Benefice client :</strong> {% with benef=idmission|benef_projet %}{{benef}}{% endwith %}</p>
                 <p><strong>Environnement :</strong> {{mission.environnementMission}} </p>
                 <a class="btn btn-primary bouton_modif_expe" role="button" href={{urlModif}} target="_blank">Modifier </a>
             </div>
         </div>
+        {% endwith %}
         {% endwith %}
         {% endfor %}
         {% else %}

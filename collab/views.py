@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from django.views.generic import CreateView
-from collab.models import competences,client,collaborateurs,outils,experiences
+from collab.models import competences,client,collaborateurs,outils,experiences, projet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from operator import itemgetter
 import logging
@@ -19,17 +19,38 @@ def index(request):
     nbCompe = competences.objects.count()
     nbOutils = outils.objects.count()
     nbClient = client.objects.count()
-    #calcul du nombre de client actif (a savoir les clients avec une mission en cours a date) A REWORK CAR PAS DE PRISE EN COMPTE DE DATE
+    #Verification qu'un projet est actif (donc avec au moins une mission en cours)
+    def verifProjetActif(idProjet):
+        projetaTest = projet.objects.filter(pk=idProjet)
+        #try:
+        expeATest = projetaTest[0].experiencesLiees.all()
+        for elt in expeATest:
+            dateDeFin = elt.dateFin
+            if dateDeFin == None:
+                statut = "ACTIF"
+                break
+            elif dateDeFin > datetime.date.today(): 
+                statut = "ACTIF"
+                break
+            else:
+                statut = "PAS ACTIF"
+        #except:
+        #    statut = "PAS ACTIF"
+        return statut
+    #calcul du nombre de client actif (a savoir les clients avec une mission en cours a date) A REWORK car expe n'ont plus de client
     def getClientActif():
         client_total=client.objects.all()
         count=0
         for elt in client_total:
-            nb = experiences.objects.filter(dateFin__gte=datetime.date.today(),client=elt.id).count()
-            nb2 = experiences.objects.filter(dateFin=None,client=elt.id).count()
-            if nb>0 or nb2>0:
-                count+=1
-            else:
-                pass
+            projets = projet.objects.filter(client=elt.id)
+            for elt in projets:
+                idProjet = elt.pk
+                statut= verifProjetActif(idProjet)
+                if statut == "ACTIF":
+                    count+=1
+                    break
+                else:
+                    continue
         return(count)
     nbClientActif = getClientActif()
     nbClientInactif = nbClient - nbClientActif
