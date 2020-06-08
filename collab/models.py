@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ModelForm
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
+from ckeditor.fields import RichTextField 
 
 #Clients
 class client(models.Model):
@@ -138,7 +139,7 @@ class collaborateurs(models.Model):
     prenomCollaborateur = models.CharField(max_length=200)
     titreCollaborateur = models.CharField(max_length=200)
     dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
-    texteIntroductifCv = models.TextField(default='')
+    texteIntroductifCv = RichTextField(default='')
     nbAnneeExperience = models.IntegerField()
     codePostal = models.CharField(default='',max_length=200)
     telephone = models.CharField(default='',max_length=200)

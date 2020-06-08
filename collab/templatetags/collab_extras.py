@@ -50,6 +50,12 @@ def recup_client_secteur(id_mission):
     secteur = get_object_or_404(client, pk=client_pk).get_domaineClient_display()
     return secteur
 
+#recup secteur affichage propre d'un client
+@register.filter(name='recup_client_secteur_propre')
+def recup_client_secteur_propre(client_id):
+    secteur = get_object_or_404(client, pk=client_id).get_domaineClient_display()
+    return secteur
+
 #Calcul du nombre de consultant par outil
 @register.filter(name='nb_consultant_outil')
 def nb_consultant_outil(id_outil):

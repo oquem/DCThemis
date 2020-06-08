@@ -17,7 +17,7 @@
                 {% else %}
                 <h1 class="text-center">{{collab.titreCollaborateur}} - {{collab.nbAnneeExperience}} ans d'expérience</h1>
                 {% endif %}
-                <p class="lead text-center">{{collab.texteIntroductifCv}}</p>
+                <p class="lead text-center">{{collab.texteIntroductifCv | safe}}</p>
             </div>
         </div>
         <div class="row">

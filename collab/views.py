@@ -22,20 +22,20 @@ def index(request):
     #Verification qu'un projet est actif (donc avec au moins une mission en cours)
     def verifProjetActif(idProjet):
         projetaTest = projet.objects.filter(pk=idProjet)
-        #try:
-        expeATest = projetaTest[0].experiencesLiees.all()
-        for elt in expeATest:
-            dateDeFin = elt.dateFin
-            if dateDeFin == None:
-                statut = "ACTIF"
-                break
-            elif dateDeFin > datetime.date.today(): 
-                statut = "ACTIF"
-                break
-            else:
-                statut = "PAS ACTIF"
-        #except:
-        #    statut = "PAS ACTIF"
+        if not projetaTest:
+            statut = "PAS ACTIF"
+        else:
+            expeATest = projetaTest[0].experiencesLiees.all()
+            for elt in expeATest:
+                dateDeFin = elt.dateFin
+                if dateDeFin == None:
+                    statut = "ACTIF"
+                    break
+                elif dateDeFin > datetime.date.today(): 
+                    statut = "ACTIF"
+                    break
+                else:
+                    statut = "PAS ACTIF"
         return statut
     #calcul du nombre de client actif (a savoir les clients avec une mission en cours a date) A REWORK car expe n'ont plus de client
     def getClientActif():
@@ -185,7 +185,7 @@ def recherche_consultant(request):
         return HttpResponse(template.render(context, request))
 
     else: # no data submitted
-        collab_list= collaborateurs.objects.all()
+        collab_list= collaborateurs.objects.all().order_by('nomCollaborateur')
         page = request.GET.get('page', 1)
         paginator = Paginator(collab_list, 10)
         try:

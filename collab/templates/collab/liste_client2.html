@@ -22,7 +22,7 @@
                             {% with truc=cli.pk %}
                             <tr>
                                 <td>{{cli.nomClient}} </td>
-                                <td class="hidden-xs hidden-sm">{{cli.domaineClient}} </td>
+                                <td class="hidden-xs hidden-sm">{{truc|recup_client_secteur_propre }} </td>
                                 <td>{{truc|recup_mission}} </td>
                                 <td>{{truc|recup_mission_en_cours}} </td>
                                <td class="hidden-xs hidden-sm">{{truc|statut_client}}</td>
