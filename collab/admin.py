@@ -16,20 +16,21 @@ class OutilAdmin(admin.ModelAdmin):
 admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
 class CollabAdmin(admin.ModelAdmin):
-    search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence']
+    search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence','nomCollaborateur', 'prenomCollaborateur',]
     list_filter = ('estEnIntercontrat','manager__manager','typeContrat','grade','methodologie')
     list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur','nbAnneeExperience','typeContrat')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
-    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service']
-    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client')
+    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service','nomMission','projetDeLaMission__client__nomClient']
+    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client','missionThemis')
+    list_display = ('nomMission', 'collaborateurMission', 'projetDeLaMission')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
     search_fields = ['client','nomProjet']
     list_filter = ('client','nbJourHomme','projetThemis')
-    list_display = ('nomProjet', 'nbJourHomme')
+    list_display = ('nomProjet','client','nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 class ClientAdmin(admin.ModelAdmin):
     search_fields = ['nomClient']
