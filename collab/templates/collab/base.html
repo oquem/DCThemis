@@ -1,7 +1,7 @@
 {% load static %}
 {% load admin_urls %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -14,6 +14,7 @@
     <link rel="stylesheet" href={% static "collab/assets/css/Full-Width-Center-Container.css" %}>
     <link rel="stylesheet" href={% static "collab/assets/css/Simple-Profile-Info.css" %}>
     <link rel="stylesheet" href={% static "collab/assets/css/Google-Style-Login.css" %}>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
 </head>
 
@@ -71,6 +72,7 @@
     {% endif %}
     <script src={% static "collab/assets/js/jquery.min.js" %}></script>
     <script src={% static "collab/assets/bootstrap/js/bootstrap.min.js" %}></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
 
 </html>

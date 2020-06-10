@@ -271,7 +271,7 @@ def liste_outil(request):
     template = loader.get_template('collab/liste_outil2.html')
     outils_list= outils.objects.all().order_by('famille')
     page = request.GET.get('page', 1)
-    paginator = Paginator(outils_list, 10)
+    paginator = Paginator(outils_list, 100)
     try:
         tools= paginator.page(page)
     except PageNotAnInteger:

@@ -38,6 +38,7 @@ class client(models.Model):
         ('28','Fonction publique'),
         ('29','Hôtellerie , Café, Tabac et Restauration'),
         ('30','Imprimerie'),
+        ('3D','Industrie'),
         ('31','Industrie du tabac '),
         ('32','Industrie pharmaceutique'),
         ('33','Informatique, Numérique et Réseaux'),
@@ -131,10 +132,12 @@ class LanguesParlee(models.Model):
     nom = models.CharField(max_length=500)
     NIVEAU_LANGUE = (
         ('Debutant', 'Debutant'),
+        ('Intermediaire','Intermediaire'),
+        ('Professionnel','Professionnel'),
         ('Courant','Courant'),
         ('Bilingue', 'Bilingue'),
     )
-    niveau = models.CharField(max_length=10, choices=NIVEAU_LANGUE, default='Debutant')
+    niveau = models.CharField(max_length=20, choices=NIVEAU_LANGUE, default='Debutant')
     def __str__(self):
         return str('%s %s' %(self.nom, self.niveau))
 
