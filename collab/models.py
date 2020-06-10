@@ -64,6 +64,11 @@ class client(models.Model):
     def __str__(self):
         return self.nomClient
 
+#Methodo
+class Methodo(models.Model):
+    nom = models.CharField(max_length=250)
+    def __str__(self):
+        return self.nom
 #Outils 
 class familleOutils(models.Model):
     nomFamilleOutils = models.CharField(max_length=250)
@@ -139,11 +144,11 @@ class collaborateurs(models.Model):
     prenomCollaborateur = models.CharField(max_length=200)
     titreCollaborateur = models.CharField(max_length=200)
     dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
-    texteIntroductifCv = RichTextField(default='')
-    nbAnneeExperience = models.IntegerField()
-    codePostal = models.CharField(default='',max_length=200)
-    telephone = models.CharField(default='',max_length=200)
-    mail = models.CharField(default='',max_length=200)
+    texteIntroductifCv = RichTextField(default='',blank=True, null=True)
+    nbAnneeExperience = models.IntegerField(blank=True)
+    codePostal = models.CharField(default='',max_length=200,blank=True, null=True)
+    telephone = models.CharField(default='',max_length=200,blank=True, null=True)
+    mail = models.CharField(default='',max_length=200,blank=True, null=True)
     manager = models.ManyToManyField(gestionManagerialeConsultant)
     TYPE_CONTRAT = (
         ('I', 'CDI'),
@@ -160,23 +165,23 @@ class collaborateurs(models.Model):
         ('3', 'Sénior'),
         ('4', 'Expert'),
     )
-    grade = models.CharField(max_length=1, choices=GRADE, default='1')
-    dateArrivee = models.DateField('date d\'arrivée chez Themis', null=True)
+    grade = models.CharField(max_length=1, choices=GRADE, default='1',blank=True, null=True)
+    dateArrivee = models.DateField('date d\'arrivée chez Themis', blank=True, null=True)
     dateSortie = models.DateField('date de sortie de chez Themis', blank=True, null=True)
-    expertiseSectorielle = models.ManyToManyField(expertiseSectorielle)
-    niveauxIntervention = models.ManyToManyField(niveauIntervention)
+    expertiseSectorielle = models.ManyToManyField(expertiseSectorielle, blank=True)
+    niveauxIntervention = models.ManyToManyField(niveauIntervention, blank=True)
     expSignificative1= models.CharField(max_length=500, blank=True, null=True)
     expSignificative2= models.CharField(max_length=500, blank=True, null=True)
     expSignificative3= models.CharField(max_length=500, blank=True, null=True)
     expSignificative4= models.CharField(max_length=500, blank=True, null=True)
     expSignificative5= models.CharField(max_length=500, blank=True, null=True)
-    clientPrincipaux = models.ManyToManyField(client)
-    listeCompetencesCles = models.ManyToManyField(competences)
-    formation = models.ManyToManyField(obtentionFormation)
-    parcours = models.TextField()
-    methodologie = models.TextField()
-    langues = models.ManyToManyField(LanguesParlee)
-    outilsCollaborateur = models.ManyToManyField(outils)
+    clientPrincipaux = models.ManyToManyField(client, blank=True)
+    listeCompetencesCles = models.ManyToManyField(competences, blank=True)
+    formation = models.ManyToManyField(obtentionFormation, blank=True)
+    parcours = RichTextField(default='', blank=True)
+    methodologie = models.ManyToManyField(Methodo, blank=True)
+    langues = models.ManyToManyField(LanguesParlee, blank=True)
+    outilsCollaborateur = models.ManyToManyField(outils, blank=True)
     estEnIntercontrat = models.BooleanField(default=False)
     def __str__(self):
         return self.nomCollaborateur
@@ -190,13 +195,13 @@ class experiences(models.Model):
     nomMission = models.CharField(max_length=300)
     dateDebut = models.DateField('date de début de mission')
     dateFin = models.DateField('date de fin de mission', blank=True, null=True)
-    employeurIntervention = models.CharField(max_length=300,default='')
-    mandataire = models.CharField(max_length=300,default='')
-    service = models.CharField(max_length=300,default='')
-    resumeIntervention = models.TextField(default='')
-    descriptifMission = models.TextField(default='')
-    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)])
-    environnementMission =  models.TextField(default='')
+    missionThemis = models.BooleanField(default=True)
+    mandataire = models.CharField(max_length=300,default='',blank=True)
+    service = models.CharField(max_length=300,default='',blank=True)
+    resumeIntervention =  RichTextField(default='', blank=True)
+    descriptifMission =  RichTextField(default='', blank=True)
+    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
+    environnementMission =  RichTextField(default='', blank=True, null=True)
     collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='')
     def __str__(self):
         return self.nomMission
@@ -231,18 +236,19 @@ class gestionCommercialeProjet(models.Model):
 #Projet (un projet peut englober plusieurs Expériences par exemple projet SAPHIR)
 class projet(models.Model):
     nomProjet = models.CharField(max_length=300)
-    resumeProjet = models.TextField(default='')
+    resumeProjet = RichTextField(default='', blank=True, null=True)
     client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
-    budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0)
-    nbJourHomme = models.IntegerField()
-    livrables = models.TextField(default='')
-    benefClient = models.TextField(default='')
-    contexteMission = models.TextField(default='')
+    projetThemis = models.BooleanField(default=True)
+    budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0, blank=True)
+    nbJourHomme = models.IntegerField(blank=True)
+    livrables = RichTextField(default='', blank=True, null=True)
+    benefClient = RichTextField(default='', blank=True, null=True)
+    contexteMission = RichTextField(default='', blank=True, null=True)
     dateDebut = models.DateField('date de début du Projet', null=True)
     dateFin = models.DateField('date de fin du Projet', blank=True, null=True)
     BUProjet = models.ForeignKey(BU, on_delete=models.SET_NULL, null=True)
-    gestionManageriale = models.ManyToManyField(gestionManagerialeProjet)
-    gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet)
+    gestionManageriale = models.ManyToManyField(gestionManagerialeProjet,blank=True)
+    gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet,blank=True)
     experiencesLiees = models.ManyToManyField(experiences)
     def __str__(self):
         return self.nomProjet

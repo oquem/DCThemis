@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, client, projet, BU, gestionManagerialeProjet, gestionCommercialeProjet, gestionManagerialeConsultant, expertiseSectorielle, formation, obtentionFormation, niveauIntervention, LanguesParlee
+from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, client, projet, BU, gestionManagerialeProjet, gestionCommercialeProjet, gestionManagerialeConsultant, expertiseSectorielle, formation, obtentionFormation, niveauIntervention, LanguesParlee, Methodo
 
 class CompetenceAdmin(admin.ModelAdmin):
     search_fields = ['nomCompetence']
@@ -22,13 +22,13 @@ class CollabAdmin(admin.ModelAdmin):
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
-    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','employeurIntervention','service']
-    list_filter = ('employeurIntervention','collaborateurMission__nomCollaborateur','mandataire')
+    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service']
+    list_filter = ('collaborateurMission__nomCollaborateur','mandataire')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
     search_fields = ['client','nomProjet']
-    list_filter = ('client','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme')
+    list_filter = ('client','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme','projetThemis')
     list_display = ('nomProjet', 'nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 class ClientAdmin(admin.ModelAdmin):
@@ -56,3 +56,4 @@ admin.site.register(formation, FormationAdmin)
 admin.site.register(obtentionFormation)
 admin.site.register(niveauIntervention)
 admin.site.register(LanguesParlee)
+admin.site.register(Methodo)
