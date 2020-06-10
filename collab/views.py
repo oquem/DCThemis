@@ -25,8 +25,8 @@ def index(request):
         if not projetaTest:
             statut = "PAS ACTIF"
         else:
-            expeATest = projetaTest[0].experiencesLiees.all()
-            for elt in expeATest:
+            expesATest = experiences.objects.filter(projetDeLaMission=projetaTest[0].pk)
+            for elt in expesATest:
                 dateDeFin = elt.dateFin
                 if dateDeFin == None:
                     statut = "ACTIF"
@@ -138,7 +138,7 @@ def index(request):
 # Liste consultant PAGINEE
 def liste_consultant(request):
     template = loader.get_template('collab/liste_consultant_recherche.html')
-    collab_list= collaborateurs.objects.all().order_by('id')
+    collab_list= collaborateurs.objects.all().order_by('nomCollaborateur')
     page = request.GET.get('page', 1)
     paginator = Paginator(collab_list, 10)
     try:
@@ -217,7 +217,7 @@ def reussite_ajout_collaborateurs(request):
 #Liste client PAGINEE
 def liste_client(request):
     template = loader.get_template('collab/liste_client2.html')
-    client_list= client.objects.all().order_by('id')
+    client_list= client.objects.all().order_by('nomClient')
     page = request.GET.get('page', 1)
     paginator = Paginator(client_list, 10)
     try:
@@ -242,7 +242,7 @@ def reussite_ajout_client(request):
 #Liste compétences PAGINEE
 def liste_competence(request):
     template = loader.get_template('collab/liste_competence2.html')
-    compe_list= competences.objects.all().order_by('id')
+    compe_list= competences.objects.all().order_by('famille')
     page = request.GET.get('page', 1)
     paginator = Paginator(compe_list, 10)
     try:
@@ -269,7 +269,7 @@ def reussite_ajout_competence(request):
 #Liste outil REELLEMENT PAGINEE
 def liste_outil(request):
     template = loader.get_template('collab/liste_outil2.html')
-    outils_list= outils.objects.all().order_by('id')
+    outils_list= outils.objects.all().order_by('famille')
     page = request.GET.get('page', 1)
     paginator = Paginator(outils_list, 10)
     try:

@@ -145,7 +145,7 @@ class collaborateurs(models.Model):
     titreCollaborateur = models.CharField(max_length=200)
     dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
     texteIntroductifCv = RichTextField(default='',blank=True, null=True)
-    nbAnneeExperience = models.IntegerField(blank=True)
+    nbAnneeExperience = models.IntegerField(blank=True, null=True)
     codePostal = models.CharField(default='',max_length=200,blank=True, null=True)
     telephone = models.CharField(default='',max_length=200,blank=True, null=True)
     mail = models.CharField(default='',max_length=200,blank=True, null=True)
@@ -190,26 +190,6 @@ class collaborateurs(models.Model):
     class Meta: 
         verbose_name = 'Consultant'
 
-#Experiences
-class experiences(models.Model):
-    nomMission = models.CharField(max_length=300)
-    dateDebut = models.DateField('date de début de mission')
-    dateFin = models.DateField('date de fin de mission', blank=True, null=True)
-    missionThemis = models.BooleanField(default=True)
-    mandataire = models.CharField(max_length=300,default='',blank=True)
-    service = models.CharField(max_length=300,default='',blank=True)
-    resumeIntervention =  RichTextField(default='', blank=True)
-    descriptifMission =  RichTextField(default='', blank=True)
-    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
-    environnementMission =  RichTextField(default='', blank=True, null=True)
-    collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='')
-    def __str__(self):
-        return self.nomMission
-    def get_absolute_url(self):
-        collab=self.collaborateurMission.id
-        return "/consultant/%i/" % collab
-    class Meta: 
-        verbose_name = 'Intervention'
 #BU
 class BU(models.Model):
     nomBU = models.CharField(max_length=250)
@@ -238,7 +218,7 @@ class projet(models.Model):
     nomProjet = models.CharField(max_length=300)
     resumeProjet = RichTextField(default='', blank=True, null=True)
     client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
-    projetThemis = models.BooleanField(default=True)
+    projetThemis = models.BooleanField(default=True, help_text="Est-ce que c'est un projet réalisé chez Thémis ou en dehors ?")
     budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0, blank=True)
     nbJourHomme = models.IntegerField(blank=True)
     livrables = RichTextField(default='', blank=True, null=True)
@@ -249,6 +229,29 @@ class projet(models.Model):
     BUProjet = models.ForeignKey(BU, on_delete=models.SET_NULL, null=True)
     gestionManageriale = models.ManyToManyField(gestionManagerialeProjet,blank=True)
     gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet,blank=True)
-    experiencesLiees = models.ManyToManyField(experiences)
+    #experiencesLiees = models.ManyToManyField(experiences)
     def __str__(self):
         return self.nomProjet
+
+
+#Experiences
+class experiences(models.Model):
+    nomMission = models.CharField(max_length=300)
+    dateDebut = models.DateField('date de début de mission')
+    dateFin = models.DateField('date de fin de mission', blank=True, null=True)
+    missionThemis = models.BooleanField(default=True, help_text="Est-ce que c'est une mission réalisé chez Thémis ou en dehors ?")
+    mandataire = models.CharField(max_length=300,default='',blank=True)
+    service = models.CharField(max_length=300,default='',blank=True)
+    resumeIntervention =  RichTextField(default='', blank=True)
+    descriptifMission =  RichTextField(default='', blank=True)
+    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
+    environnementMission =  RichTextField(default='', blank=True, null=True)
+    collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='')
+    projetDeLaMission = models.ForeignKey(projet, on_delete=models.SET_NULL, default='', null=True)
+    def __str__(self):
+        return self.nomMission
+    def get_absolute_url(self):
+        collab=self.collaborateurMission.id
+        return "/consultant/%i/" % collab
+    class Meta: 
+        verbose_name = 'Intervention'

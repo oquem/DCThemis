@@ -28,7 +28,7 @@ class ExpeAdmin(admin.ModelAdmin):
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
     search_fields = ['client','nomProjet']
-    list_filter = ('client','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme','projetThemis')
+    list_filter = ('client','nbJourHomme','projetThemis')
     list_display = ('nomProjet', 'nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 class ClientAdmin(admin.ModelAdmin):

@@ -17,35 +17,40 @@ def statut_consultant(id_collab):
 #recup contexte projet d'une mission
 @register.filter(name='contexte_projet')
 def contexte_projet(id_mission):
-    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    mission = get_object_or_404(experiences, pk=id_mission)
+    projet_de_la_mission = mission.projetDeLaMission
     contexte_mission = projet_de_la_mission.contexteMission
     return contexte_mission
 
 #recup livrables projet d'une mission
 @register.filter(name='livrable_projet')
 def livrable_projet(id_mission):
-    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    mission = get_object_or_404(experiences, pk=id_mission)
+    projet_de_la_mission = mission.projetDeLaMission
     contexte_mission = projet_de_la_mission.livrables
     return contexte_mission
 
 #recup benef projet d'une mission
 @register.filter(name='benef_projet')
 def benef_projet(id_mission):
-    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    mission = get_object_or_404(experiences, pk=id_mission)
+    projet_de_la_mission = mission.projetDeLaMission
     contexte_mission = projet_de_la_mission.benefClient
     return contexte_mission
 
 #recup client d'une mission
 @register.filter(name='recup_client_mission')
 def recup_client_mission(id_mission):
-    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
-    client = projet_de_la_mission.client
+    expe = get_object_or_404(experiences, pk=id_mission)
+    id_projet_de_la_mission = expe.projetDeLaMission.pk
+    client = get_object_or_404(projet, pk=id_projet_de_la_mission)
     return client
 
 #recup Secteur d'un client d'une mission
 @register.filter(name='recup_client_secteur')
 def recup_client_secteur(id_mission):
-    projet_de_la_mission = get_object_or_404(projet, experiencesLiees=id_mission)
+    mission = get_object_or_404(experiences, pk=id_mission)
+    projet_de_la_mission = mission.projetDeLaMission
     client_pk = projet_de_la_mission.client.pk
     secteur = get_object_or_404(client, pk=client_pk).get_domaineClient_display()
     return secteur
@@ -74,7 +79,7 @@ def recup_mission(id_client):
     projetsDuClient = projet.objects.filter(client=id_client)
     nb=0
     for elt in projetsDuClient:
-        missions = elt.experiencesLiees.all()
+        missions = experiences.objects.filter(projetDeLaMission=elt.pk)
         for x in missions:
             nb+=1
     return nb
@@ -85,7 +90,7 @@ def recup_mission_en_cours(id_client):
     projetsDuClient = projet.objects.filter(client=id_client)
     nb=0
     for elt in projetsDuClient:
-        missions = elt.experiencesLiees.all()
+        missions = experiences.objects.filter(projetDeLaMission=elt.pk)
         for x in missions:
             date_fin=x.dateFin
             if date_fin == None:
@@ -104,7 +109,7 @@ def statut_client(id_client):
         statut="Inactif"
     else:
         for elt in projetsDuClient:
-            missions = elt.experiencesLiees.all()
+            missions = experiences.objects.filter(projetDeLaMission=elt.pk)
             for x in missions:
                 date_fin=x.dateFin
                 if date_fin == None:
