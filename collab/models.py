@@ -142,6 +142,7 @@ class LanguesParlee(models.Model):
 class collaborateurs(models.Model):
     nomCollaborateur = models.CharField(max_length=200)
     prenomCollaborateur = models.CharField(max_length=200)
+    trigramme = models.CharField(max_length=3,blank=True, null=True)
     titreCollaborateur = models.CharField(max_length=200)
     dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
     texteIntroductifCv = RichTextField(default='',blank=True, null=True)

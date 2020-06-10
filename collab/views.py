@@ -149,13 +149,13 @@ def liste_consultant(request):
         collabs = paginator.page(paginator.num_pages)
     context={'collabs':collabs}
     return HttpResponse(template.render(context, request))
-#Liste consultant recherche WORK IN PROGRESS
+#Liste consultant recherche
 def recherche_consultant(request):
     #chargement du template HTML
     template = loader.get_template('collab/liste_consultant_recherche.html')
     #Recherche
     keywords=''
-    if request.method=='POST': # form was submitted
+    if request.method=='POST': # soumission du form
         keywords = request.POST.get("nom", "") # <input type="text" name="nom">
         all_queries = None
         search_fields = ('nomCollaborateur','prenomCollaborateur')

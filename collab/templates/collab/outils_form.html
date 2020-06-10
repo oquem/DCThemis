@@ -24,11 +24,11 @@
             </div>
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav">
-                    <li role="presentation"><a href="{% url 'index'%}">Accueill</a></li>
-                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Collaborateurs <span class="caret"></span></a>
+                    <li role="presentation"><a href="{% url 'index'%}">Accueil</a></li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Consultants <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a href="{% url 'liste_consultant'%}">Liste Collaborateurs</a></li>
-                            <li role="presentation"><a href="#">Ajout d'un collaborateur</a></li>
+                            <li role="presentation"><a href="{% url 'liste_consultant'%}">Liste Consultants</a></li>
+                            <li role="presentation"><a href="{% url 'collaborateursCreateView'%}">Ajout d'un consultant</a></li>
                         </ul>
                     </li>
                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Clients <span class="caret"></span></a>
@@ -49,9 +49,13 @@
                             <li role="presentation"><a href="{% url 'outilsCreateView'%}">Ajout d'un outil</a></li>
                         </ul>
                     </li>
-                    <li role="presentation"><a href="#">CRA </a></li>
-                    <li role="presentation"><a href="#" id="nav_login" class="navbar-nav ml-auto">Connexion / Deconnexion</a></li>
+                    <li role="presentation"><a href="https://intranet.itsgroup.fr/" target="_blank">Intranet ITS </a></li>
+                    {% if user.is_authenticated %}
+                    <li role="presentation"><a href="{% url 'logout' %}" id="nav_login" class="navbar-nav ml-auto">Deconnexion</a></li>
                     <li role="presentation"><a href="{% url 'admin:index'%}" id="nav_login" class="navbar-nav ml-auto">Admin </a></li>
+                    {% else %}
+                    <li role="presentation"><a href="{% url 'login' %}" id="nav_login" class="navbar-nav ml-auto">Connexion</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

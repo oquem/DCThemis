@@ -17,13 +17,13 @@ admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
 class CollabAdmin(admin.ModelAdmin):
     search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence']
-    list_filter = ('estEnIntercontrat','nbAnneeExperience','manager__manager','typeContrat')
-    list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur')
+    list_filter = ('estEnIntercontrat','manager__manager','typeContrat','grade','methodologie')
+    list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur','nbAnneeExperience','typeContrat')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
     search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service']
-    list_filter = ('collaborateurMission__nomCollaborateur','mandataire')
+    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
