@@ -14,6 +14,7 @@ class client(models.Model):
         ('4','Armée, sécurité'),
         ('5','Art, Design'),
         ('6','Assurance'),
+        ('6B','Assurance de Personne'),
         ('7','Audiovisuel, Spectacle, Cinéma'),
         ('8','Audit, Études et conseils, Expertise'),
         ('9','Automobile et  réparation automobile '),
@@ -143,15 +144,15 @@ class LanguesParlee(models.Model):
 
 #Collaborateur
 class collaborateurs(models.Model):
-    nomCollaborateur = models.CharField(max_length=200)
-    prenomCollaborateur = models.CharField(max_length=200)
+    nomCollaborateur = models.CharField('Nom du Collaborateur', max_length=200)
+    prenomCollaborateur = models.CharField('Prénom du Collaborateur', max_length=200)
     trigramme = models.CharField(max_length=3,blank=True, null=True)
-    titreCollaborateur = models.CharField(max_length=200)
-    dateDeNaissance = models.DateField('date de naissance du consultant', blank=True, null=True)
-    texteIntroductifCv = RichTextField(default='',blank=True, null=True)
-    nbAnneeExperience = models.IntegerField(blank=True, null=True)
-    codePostal = models.CharField(default='',max_length=200,blank=True, null=True)
-    telephone = models.CharField(default='',max_length=200,blank=True, null=True)
+    titreCollaborateur = models.CharField('Titre du Collaborateur',max_length=200, help_text="Il s’agit du titre que l’on retrouve en première page du DC au-dessus du texte introductif (ex : Consultant AMOA)")
+    dateDeNaissance = models.DateField('Date de naissance', blank=True, null=True)
+    texteIntroductifCv = RichTextField('Texte introductif du DC', default='',blank=True, null=True, help_text="Il s’agit du texte introductif que l’on retrouve en première page du DC au-dessous du titre introductif")
+    nbAnneeExperience = models.IntegerField('Nb d’année d’expérience', blank=True, null=True)
+    codePostal = models.CharField('Code Postal', default='',max_length=200,blank=True, null=True)
+    telephone = models.CharField('Téléphone', default='',max_length=200,blank=True, null=True)
     mail = models.CharField(default='',max_length=200,blank=True, null=True)
     manager = models.ManyToManyField(gestionManagerialeConsultant)
     TYPE_CONTRAT = (
@@ -162,7 +163,7 @@ class collaborateurs(models.Model):
         ('X', 'Indépendant'),
         ('S', 'Sous-traitant'),
     )
-    typeContrat = models.CharField(max_length=1, choices=TYPE_CONTRAT, default='I')
+    typeContrat = models.CharField('Type de Contrat', max_length=1, choices=TYPE_CONTRAT, default='I')
     GRADE = (
         ('1', 'Junior'),
         ('2', 'Confirmé'),
@@ -172,20 +173,20 @@ class collaborateurs(models.Model):
     grade = models.CharField(max_length=1, choices=GRADE, default='1',blank=True, null=True)
     dateArrivee = models.DateField('date d\'arrivée chez Themis', blank=True, null=True)
     dateSortie = models.DateField('date de sortie de chez Themis', blank=True, null=True)
-    expertiseSectorielle = models.ManyToManyField(expertiseSectorielle, blank=True)
-    niveauxIntervention = models.ManyToManyField(niveauIntervention, blank=True)
-    expSignificative1= models.CharField(max_length=500, blank=True, null=True)
-    expSignificative2= models.CharField(max_length=500, blank=True, null=True)
-    expSignificative3= models.CharField(max_length=500, blank=True, null=True)
-    expSignificative4= models.CharField(max_length=500, blank=True, null=True)
-    expSignificative5= models.CharField(max_length=500, blank=True, null=True)
-    clientPrincipaux = models.ManyToManyField(client, blank=True)
-    listeCompetencesCles = models.ManyToManyField(competences, blank=True)
+    expertiseSectorielle = models.ManyToManyField(expertiseSectorielle, blank=True, verbose_name='Expertise Sectorielle',help_text='Indique le « secteur : Direction ou Service Client » (ex : Industrie Pharmaceutique : Achat, Service Financier)')
+    niveauxIntervention = models.ManyToManyField(niveauIntervention, blank=True, verbose_name='Niveau d’intervention',help_text='Idéalement en indiquer 5 et en ne dépassant pas les 10')
+    expSignificative1= models.CharField('Expérience Significative 1', max_length=500, blank=True, null=True)
+    expSignificative2= models.CharField('Expérience Significative 2', max_length=500, blank=True, null=True)
+    expSignificative3= models.CharField('Expérience Significative 3', max_length=500, blank=True, null=True)
+    expSignificative4= models.CharField('Expérience Significative 4', max_length=500, blank=True, null=True)
+    expSignificative5= models.CharField('Expérience Significative 5', max_length=500, blank=True, null=True)
+    clientPrincipaux = models.ManyToManyField(client, blank=True, verbose_name='Clients Principaux', help_text='Idéalement en indiquer 5 et en ne dépassant pas les 10')
+    listeCompetencesCles = models.ManyToManyField(competences, blank=True, verbose_name='Compétences Clés ')
     formation = models.ManyToManyField(obtentionFormation, blank=True)
     parcours = RichTextField(default='', blank=True)
-    methodologie = models.ManyToManyField(Methodo, blank=True)
-    langues = models.ManyToManyField(LanguesParlee, blank=True)
-    outilsCollaborateur = models.ManyToManyField(outils, blank=True)
+    methodologie = models.ManyToManyField(Methodo, blank=True, verbose_name='Méthodologies')
+    langues = models.ManyToManyField(LanguesParlee, blank=True, help_text='Obligatoire, indiquez le niveau d’anglais')
+    outilsCollaborateur = models.ManyToManyField(outils, blank=True, verbose_name='Outils')
     estEnIntercontrat = models.BooleanField(default=False)
     def __str__(self):
         return self.nomCollaborateur
@@ -219,20 +220,21 @@ class gestionCommercialeProjet(models.Model):
 
 #Projet (un projet peut englober plusieurs Expériences par exemple projet SAPHIR)
 class projet(models.Model):
-    nomProjet = models.CharField(max_length=300)
-    resumeProjet = RichTextField(default='', blank=True, null=True)
+    projetThemis = models.BooleanField('Projet Thémis', default=True, help_text="Décochez la coche, s’il s’agit d’un projet pour le compte d’une autre société")
+    nomProjet = models.CharField('Nom du projet', max_length=300)
     client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
-    projetThemis = models.BooleanField(default=True, help_text="Est-ce que c'est un projet réalisé chez Thémis ou en dehors ?")
     budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0, blank=True)
-    nbJourHomme = models.IntegerField(blank=True)
-    livrables = RichTextField(default='', blank=True, null=True)
-    benefClient = RichTextField(default='', blank=True, null=True)
-    contexteMission = RichTextField(default='', blank=True, null=True)
+    nbJourHomme = models.IntegerField('Nombre de jours hommes', blank=True)
     dateDebut = models.DateField('date de début du Projet', null=True)
     dateFin = models.DateField('date de fin du Projet', blank=True, null=True)
-    BUProjet = models.ForeignKey(BU, on_delete=models.SET_NULL, null=True)
-    gestionManageriale = models.ManyToManyField(gestionManagerialeProjet,blank=True)
-    gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet,blank=True)
+    resumeProjet = RichTextField('Résumé du Projet', default='', blank=True, null=True, help_text='Bref résumé du projet en 3 lignes')
+    contexteMission = RichTextField('Contexte et Enjeux', default='', blank=True, null=True)
+    demarcheenjeux = RichTextField('Démarche et réalisations', default='', blank=True, null=True, help_text='Merci d’y ajouter aussi l’environnement technique de la mission')
+    livrables = RichTextField(default='', blank=True, null=True, help_text='Listez les livrables sous forme de bullet point')
+    benefClient = RichTextField('Bénéfices Client',default='', blank=True, null=True, help_text='Se mettre à la place du client et lister les bénéfices obtenus')
+    BUProjet = models.ForeignKey(BU, on_delete=models.SET_NULL, null=True, verbose_name='BU rattaché au projet')
+    gestionManageriale = models.ManyToManyField(gestionManagerialeProjet, blank=True, verbose_name='Gestion Managériale', help_text="Indiquez le nom du Manager responsable du projet")
+    gestionCommerciale = models.ManyToManyField(gestionCommercialeProjet, blank=True, verbose_name='Gestion Commerciale', help_text="Indiquez le nom du Commercial responsable du projet")
     #experiencesLiees = models.ManyToManyField(experiences)
     def __str__(self):
         return self.nomProjet
@@ -240,18 +242,19 @@ class projet(models.Model):
 
 #Experiences
 class experiences(models.Model):
-    nomMission = models.CharField(max_length=300)
+    missionThemis = models.BooleanField('Mission Thémis', default=True, help_text="Décochez la coche, s’il s’agit d’une mission pour le compte d’une autre société")
+    nomMission = models.CharField('Niveau d’intervention', max_length=300, help_text="Indiquez le poste occupé par le consultant lors de l’intervention ex : (Consultant BI)")
     dateDebut = models.DateField('date de début de mission')
     dateFin = models.DateField('date de fin de mission', blank=True, null=True)
-    missionThemis = models.BooleanField(default=True, help_text="Est-ce que c'est une mission réalisé chez Thémis ou en dehors ?")
-    mandataire = models.CharField(max_length=300,default='',blank=True)
-    service = models.CharField(max_length=300,default='',blank=True)
-    resumeIntervention =  RichTextField(default='', blank=True)
-    descriptifMission =  RichTextField(default='', blank=True)
-    pourcentageIntervention = models.IntegerField(default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
-    environnementMission =  RichTextField(default='', blank=True, null=True)
-    collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='')
-    projetDeLaMission = models.ForeignKey(projet, on_delete=models.SET_NULL, default='', null=True)
+    employeur = models.CharField('Employeur lors de l’intervention', max_length=300,default='', blank=True, help_text="Dans le cas où la coche est décochée, merci d’indiquer pour le compte de quelle société avez-vous effectué cette intervention ?")
+    mandataire = models.CharField(max_length=300,default='',blank=True, help_text="Si vous êtes passez par un intermédiaire, merci d’indiquer le nom de la société sous-traitante (ex :Eugena)")
+    service = models.CharField('Direction ou Service Client', max_length=300,default='',blank=True, help_text='Indiquez le la Direction ou le Service du client dans lequel le consultant est intervenu')
+    resumeIntervention =  RichTextField('Contexte de l’intervention', default='', blank=True)
+    descriptifMission =  RichTextField('Descriptif de la mission', default='', blank=True, help_text='Décrire l’intervention en détail')
+    environnementMission =  RichTextField('Environnement Technique', default='', blank=True, null=True)
+    pourcentageIntervention = models.IntegerField('Pourcentage du temps passé en intervention', default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
+    collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='', verbose_name='Collaborateur', help_text='Utilisez la liste pour rattacher le collaborateur à la mission')
+    projetDeLaMission = models.ForeignKey(projet, on_delete=models.SET_NULL, default='', null=True, verbose_name='Projet de la mission')
     def __str__(self):
         return self.nomMission
     def get_absolute_url(self):

@@ -23,7 +23,7 @@ class CollabAdmin(admin.ModelAdmin):
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
     search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service','nomMission','projetDeLaMission__client__nomClient']
-    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client','missionThemis')
+    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client','missionThemis','projetDeLaMission')
     list_display = ('nomMission', 'collaborateurMission', 'projetDeLaMission')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)

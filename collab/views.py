@@ -26,16 +26,19 @@ def index(request):
             statut = "PAS ACTIF"
         else:
             expesATest = experiences.objects.filter(projetDeLaMission=projetaTest[0].pk)
-            for elt in expesATest:
-                dateDeFin = elt.dateFin
-                if dateDeFin == None:
-                    statut = "ACTIF"
-                    break
-                elif dateDeFin > datetime.date.today(): 
-                    statut = "ACTIF"
-                    break
-                else:
-                    statut = "PAS ACTIF"
+            if not expesATest:
+                statut = "PAS ACTIF"
+            else:
+                for elt in expesATest:
+                    dateDeFin = elt.dateFin
+                    if dateDeFin == None:
+                        statut = "ACTIF"
+                        break
+                    elif dateDeFin > datetime.date.today(): 
+                        statut = "ACTIF"
+                        break
+                    else:
+                        statut = "PAS ACTIF"
         return statut
     #calcul du nombre de client actif (a savoir les clients avec une mission en cours a date) A REWORK car expe n'ont plus de client
     def getClientActif():
