@@ -203,7 +203,7 @@ def recherche_consultant(request):
 #Detail consultant
 def collaborateur_detail(request, collaborateurs_id):
     collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
-    mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id)
+    mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
     template = loader.get_template('collab/detail_consultant2.html')
     context={'collab':collab, 'mission_du_collab':mission_du_collab}
     return HttpResponse(template.render(context, request))

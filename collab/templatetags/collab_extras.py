@@ -43,7 +43,8 @@ def benef_projet(id_mission):
 def recup_client_mission(id_mission):
     expe = get_object_or_404(experiences, pk=id_mission)
     id_projet_de_la_mission = expe.projetDeLaMission.pk
-    client = get_object_or_404(projet, pk=id_projet_de_la_mission)
+    projetaTest = get_object_or_404(projet, pk=id_projet_de_la_mission)
+    client = projetaTest.client
     return client
 
 #recup Secteur d'un client d'une mission
