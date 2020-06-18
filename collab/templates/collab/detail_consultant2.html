@@ -166,7 +166,7 @@
         </div>
         {% endwith %}
         <div class="row" id="row_bouton_cv">
-            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="#" id="bouton_generation_cv">GENERER CV</a></div>
+            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="{% url 'page_cv_html' collaborateurs_id=collab.pk %}" id="bouton_generation_cv">GENERER CV</a></div>
         </div>
     </div>
 {% endblock %}

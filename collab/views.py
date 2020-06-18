@@ -294,3 +294,12 @@ def reussite_ajout_outil(request):
     template = loader.get_template('collab/reussite_ajout_outil2.html')
     context={}
     return HttpResponse(template.render(context, request))
+
+
+#Page CV
+def page_cv_html(request, collaborateurs_id):
+    collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
+    mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
+    template = loader.get_template('collab/CV_TEST.html')
+    context={'collab':collab, 'mission_du_collab':mission_du_collab}
+    return HttpResponse(template.render(context, request))
