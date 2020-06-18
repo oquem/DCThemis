@@ -137,9 +137,9 @@
         <div class="row">
             <div class="col-md-12 colonne_xp">
                 {% if mission.dateFin == None %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
+                <h3 class="text-center titre_mission">{{mission.nomMission}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
                 {% else %}
-                <h3 class="text-center titre_mission">{{mission.niveauIntervention}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
+                <h3 class="text-center titre_mission">{{mission.nomMission}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
                 {% endif %}
                 <p><strong>{% with contexte=idmission|contexte_projet %}{{contexte|safe}}{% endwith %}</strong> </p>
                 <p><strong>Resume :</strong> {{mission.resumeIntervention|safe}} </p>
