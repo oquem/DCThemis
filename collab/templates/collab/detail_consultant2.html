@@ -137,12 +137,11 @@
         <div class="row">
             <div class="col-md-12 colonne_xp">
                 {% if mission.dateFin == None %}
-                <h3 class="text-center titre_mission">{{mission.nomMission}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
+                <h3 class="text-center titre_mission">{{mission.nomMission}} - {{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
                 {% else %}
-                <h3 class="text-center titre_mission">{{mission.nomMission}} - {% with client=idmission|recup_client_mission %}{{client}}{% endwith %} ( {% with secteur=idmission|recup_client_secteur %}{{secteur}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
+                <h3 class="text-center titre_mission">{{mission.nomMission}} - {{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
                 {% endif %}
-                <p><strong>{% with contexte=idmission|contexte_projet %}{{contexte|safe}}{% endwith %}</strong> </p>
-                <p><strong>Resume :</strong> {{mission.resumeIntervention|safe}} </p>
+                <p><strong>{{mission.resumeIntervention|safe}} </strong> </p>
                 <p><strong>Descriptif :</strong> {{mission.descriptifMission|safe}} </p>
                 <p><strong>Livrables :</strong> {% with livrable=idmission|livrable_projet %}{{livrable|safe}}{% endwith %}</p>
                 <p><strong>Benefice client :</strong> {% with benef=idmission|benef_projet %}{{benef|safe}}{% endwith %}</p>
@@ -166,7 +165,7 @@
         </div>
         {% endwith %}
         <div class="row" id="row_bouton_cv">
-            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="{% url 'page_cv_html' collaborateurs_id=collab.pk %}" id="bouton_generation_cv">GENERER CV</a></div>
+            <div class="col-md-12"><a class="btn btn-info btn-lg" role="button" href="{% url 'page_cv_word' collaborateurs_id=collab.pk %}" id="bouton_generation_cv">GENERER CV</a></div>
         </div>
     </div>
 {% endblock %}

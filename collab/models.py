@@ -165,10 +165,12 @@ class collaborateurs(models.Model):
     )
     typeContrat = models.CharField('Type de Contrat', max_length=1, choices=TYPE_CONTRAT, default='I')
     GRADE = (
-        ('1', 'Junior'),
-        ('2', 'Confirmé'),
-        ('3', 'Sénior'),
-        ('4', 'Expert'),
+        ('1', 'Consultant Junior'),
+        ('2', 'Consultant'),
+        ('3', 'Consultant Sénior'),
+        ('4', 'Runner Manager'),
+        ('5', 'Runner Manager'),
+        ('5', 'Directeur')
     )
     grade = models.CharField(max_length=1, choices=GRADE, default='1',blank=True, null=True)
     dateArrivee = models.DateField('date d\'arrivée chez Themis', blank=True, null=True)
@@ -224,7 +226,7 @@ class projet(models.Model):
     nomProjet = models.CharField('Nom du projet', max_length=300)
     client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
     budget = models.DecimalField(decimal_places=2,max_digits=11, default=0.0, blank=True, null=True)
-    nbJourHomme = models.IntegerField('Nombre de jours hommes', blank=True)
+    nbJourHomme = models.IntegerField('Nombre de jours hommes', blank=True, default=0)
     dateDebut = models.DateField('date de début du Projet', null=True)
     dateFin = models.DateField('date de fin du Projet', blank=True, null=True)
     resumeProjet = RichTextField('Résumé du Projet', default='', blank=True, null=True, help_text='Bref résumé du projet en 3 lignes')
@@ -246,6 +248,7 @@ class experiences(models.Model):
     nomMission = models.CharField('Niveau d’intervention', max_length=300, help_text="Indiquez le poste occupé par le consultant lors de l’intervention ex : (Consultant BI)")
     dateDebut = models.DateField('date de début de mission')
     dateFin = models.DateField('date de fin de mission', blank=True, null=True)
+    client = models.ForeignKey(client, on_delete=models.CASCADE, null=True)
     employeur = models.CharField('Employeur lors de l’intervention', max_length=300,default='', blank=True, help_text=" Dans le cas où la coche « Mission Thémis » est décochée, merci d’indiquer pour le compte de quelle société avez-vous effectué cette intervention ?")
     mandataire = models.CharField(max_length=300,default='',blank=True, help_text="Si vous êtes passez par un intermédiaire, merci d’indiquer le nom de la société sous-traitante (ex :Eugena)")
     service = models.CharField('Direction ou Service Client', max_length=300,default='',blank=True, help_text='Indiquez la Direction ou le Service du client dans lequel le consultant est intervenu')
@@ -254,7 +257,7 @@ class experiences(models.Model):
     environnementMission =  RichTextField('Environnement Technique', default='', blank=True, null=True)
     pourcentageIntervention = models.IntegerField('Pourcentage du temps passé en intervention', default=100, validators=[MaxValueValidator(100),MinValueValidator(1)],blank=True)
     collaborateurMission = models.ForeignKey(collaborateurs, on_delete=models.CASCADE, default='', verbose_name='Collaborateur', help_text='Utilisez la liste pour rattacher le collaborateur à la mission')
-    projetDeLaMission = models.ForeignKey(projet, on_delete=models.SET_NULL, default='', null=True, verbose_name='Projet de la mission')
+    projetDeLaMission = models.ForeignKey(projet, on_delete=models.SET_NULL, default='', null=True, verbose_name='Projet de la mission', blank=True)
     def __str__(self):
         return self.nomMission
     def get_absolute_url(self):

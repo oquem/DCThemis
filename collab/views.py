@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from django.template import loader
+from django.template import loader, Context
 from django.views.generic import CreateView
 from collab.models import competences,client,collaborateurs,outils,experiences, projet
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -9,6 +9,11 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 import datetime
+from xhtml2pdf import pisa 
+from bs4 import BeautifulSoup
+from docxtpl import DocxTemplate, RichText, Listing
+import io
+from django.contrib.staticfiles.storage import staticfiles_storage
 # Homepage
 def index(request):
     template = loader.get_template('collab/index2.html')
@@ -284,6 +289,12 @@ def liste_outil(request):
     context={'tools':tools}
     return HttpResponse(template.render(context, request))
 
+def liste_outil_propre(request):
+    template = loader.get_template('collab/liste_outil2.html')
+    outils_list= outils.objects.all().order_by('famille')
+    context={'tools':outils_list}
+    return HttpResponse(template.render(context, request))
+
 class outilsCreateView(LoginRequiredMixin, CreateView):
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
@@ -303,3 +314,113 @@ def page_cv_html(request, collaborateurs_id):
     template = loader.get_template('collab/CV_TEST.html')
     context={'collab':collab, 'mission_du_collab':mission_du_collab}
     return HttpResponse(template.render(context, request))
+
+#Page CV en pdf
+def page_cv_pdf(request, collaborateurs_id):
+    collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
+    mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
+    template = loader.get_template('collab/CV_TEST.html')
+    context={'collab':collab, 'mission_du_collab':mission_du_collab}
+    html = template.render(context, request)
+    file = open('test.pdf', "w+b")
+    pisaStatus = pisa.CreatePDF(html.encode('utf-8'), dest=file, encoding='utf-8')
+    file.seek(0)
+    pdf = file.read()
+    file.close()
+    return HttpResponse(pdf, 'application/pdf')
+
+# Fonction de parsing du HTML pour la generation de CV
+def decoupe_html (raw_html):
+    soup=BeautifulSoup(raw_html,"html.parser")
+    arbre=[]
+    #decoupe en grand bloc HTML
+    for elt in soup:
+        arbre.append(elt)
+
+    #On parcours chaque elt pour le transformer en truc compréhensible par Word dans une liste
+    for elt in arbre:
+        #recup du tag de début du "chunk"
+        tag=elt.name
+        #traitement des paragraphe de texte
+        if tag == "p":
+            texte=elt.text
+            place=arbre.index(elt)
+            arbre[place]=texte
+        #traitement des listes
+        elif tag == "ul":
+            list_elt=[]
+            enfants = elt.findChildren()
+            #on récupère tous les elt de la liste
+            for chld in enfants:
+                list_elt.append(chld.text)
+            place=arbre.index(elt)
+            arbre[place]=("list",list_elt)
+    return(arbre)
+def generate_rich_texte (raw_html):
+    rich_texte=RichText()
+    html_decoupe=decoupe_html(raw_html)
+    for elt in html_decoupe:
+        print(elt)
+        if type(elt)==tuple:
+            liste=elt[1]
+            string_propre_de_liste=""
+            for truc in liste:
+                string_propre_de_liste = "• "+string_propre_de_liste+truc+"\n"
+            if html_decoupe.index(elt) == 0:
+                text=string_propre_de_liste
+            else:
+                text='\a'+string_propre_de_liste
+            rich_texte.add(text)
+        else:
+            if html_decoupe.index(elt) == 0:
+                text=str(elt)
+            else:
+                text='\a'+str(elt)
+            rich_texte.add(text)
+    return(rich_texte)
+#Page CV docx
+def page_cv_word(request, collaborateurs_id):
+    collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
+    mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
+    fichier_template = staticfiles_storage.path('collab/CV_TEST.docx')
+    doc = DocxTemplate(fichier_template)
+    context = {}
+    today = datetime.date.today()
+    nom = collab.nomCollaborateur
+    prenom = collab.prenomCollaborateur
+    nom_sortie = nom + "-"+prenom+"-"+str(today)+".docx"
+    titre = collab.titreCollaborateur
+    texte_introductif = generate_rich_texte(collab.texteIntroductifCv)
+    competencesDuCollab = collab.listeCompetencesCles.all()
+    competences=[]
+    for compe in competencesDuCollab:
+        competences.append(compe.nomCompetence)
+    context["nom"]=nom
+    context["prenom"]=prenom
+    context["titre"]=titre
+    context["text_intro"]=texte_introductif
+    context["competences"]=competences
+    #Il faut encore brancher la fonction propre du dessus
+    html_decoupe=['blablablabla',('list','1,2,3'),'reblabla']
+    parcours = RichText()
+    for elt in html_decoupe:
+        if type(elt)==tuple:
+            liste=elt[1]
+            string_propre_de_liste=""
+            for elt in liste:
+                string_propre_de_liste = string_propre_de_liste+elt+"\n"
+            listing_word=Listing(string_propre_de_liste)
+        else:
+            text='\n'+str(elt)
+            parcours.add(text)
+    context["parcours"]=parcours
+    trigramme = RichText('blablablablabla un paragraphe t\'a vu \a• poney\n• test\n\t• deuxieme niveau', style='bullet')
+    context["trigramme"]=trigramme
+    doc.render(context)
+    doc_io = io.BytesIO()
+    doc.save(doc_io)
+    doc_io.seek(0)
+    response = HttpResponse(doc_io.read())
+    response["Content-Disposition"] = "attachment; filename="+nom_sortie
+    response["Content-Type"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    return response
