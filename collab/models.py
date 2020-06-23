@@ -150,7 +150,7 @@ class collaborateurs(models.Model):
     titreCollaborateur = models.CharField('Titre du Collaborateur',max_length=200, help_text="Il s’agit du titre que l’on retrouve en première page du DC au-dessus du texte introductif (ex : Consultant AMOA)")
     dateDeNaissance = models.DateField('Date de naissance', blank=True, null=True)
     texteIntroductifCv = RichTextField('Texte introductif du DC', default='',blank=True, null=True, help_text="Il s’agit du texte introductif que l’on retrouve en première page du DC au-dessous du titre introductif")
-    nbAnneeExperience = models.IntegerField('Nb d’année d’expérience', blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(50)])
+    dateDebutExpPro = models.DateField('Date de début de carrière', blank=True, null=True)
     codePostal = models.CharField('Code Postal', default='',max_length=200,blank=True, null=True)
     telephone = models.CharField('Téléphone', default='',max_length=200,blank=True, null=True)
     mail = models.CharField(default='',max_length=200,blank=True, null=True)
@@ -169,7 +169,7 @@ class collaborateurs(models.Model):
         ('2', 'Consultant'),
         ('3', 'Consultant Sénior'),
         ('4', 'Runner Manager'),
-        ('5', 'Runner Manager'),
+        ('5', 'Manager'),
         ('5', 'Directeur')
     )
     grade = models.CharField(max_length=1, choices=GRADE, default='1',blank=True, null=True)

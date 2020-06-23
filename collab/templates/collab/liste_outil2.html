@@ -30,32 +30,5 @@
                 </div>
             </div>
         </div>
-        {% if tools.has_other_pages %}
-        <div class="row">
-            <div class="col-lg-offset-1 col-md-12 col-md-offset-1">
-                <nav>
-                    <ul class="pagination pagination-lg">
-                        {% if tools.has_previous %}
-                        <li><a aria-label="Previous" href="?page={{ tools.previous_page_number }}"><span aria-hidden="true">«</span></a></li>
-                        {% else %}
-                        <li class="disabled"><span>&laquo;</span></li>
-                        {% endif %}
-                        {% for i in tools.paginator.page_range %}
-                            {% if tools.number == i %}
-                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                            {% else %}
-                                <li><a href="?page={{ i }}">{{ i }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if tools.has_next %}
-                            <li><a aria-label="Next" href="?page={{ tools.next_page_number }}"><span aria-hidden="true">»</span></a></li>
-                        {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            </div>
-        </div>
-        {% endif %}
     </div>
 {% endblock %}

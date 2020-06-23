@@ -125,6 +125,34 @@
                         </div>
                 </div>
             </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Expe Significatives </h3></div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for expe in expeSingificatives %}
+                                {% if expe %}
+                                <li>{{expe}}</li>
+                                {% endif%}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Methodologies </h3></div>
+                        <div class="panel-body">
+                            <ul>
+                                {% for methodo in collab.methodologie.all %}
+                                <li>{{methodo}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
@@ -137,14 +165,14 @@
         <div class="row">
             <div class="col-md-12 colonne_xp">
                 {% if mission.dateFin == None %}
-                <h3 class="text-center titre_mission">{{mission.nomMission}} - {{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.dateDebut}} - En cours </h3>
+                <h3 class="text-center titre_mission">{{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.nomMission}}  - {{mission.dateDebut}} - En cours </h3>
                 {% else %}
-                <h3 class="text-center titre_mission">{{mission.nomMission}} - {{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
+                <h3 class="text-center titre_mission">{{mission.client}} ( {% with domaine=idmission|recup_client_secteur %}{{domaine}}{% endwith %} ) - {{mission.nomMission}} - {{mission.dateDebut}} / {{mission.dateFin}} </h3>
                 {% endif %}
                 <p><strong>{{mission.resumeIntervention|safe}} </strong> </p>
                 <p><strong>Descriptif :</strong> {{mission.descriptifMission|safe}} </p>
-                <p><strong>Livrables :</strong> {% with livrable=idmission|livrable_projet %}{{livrable|safe}}{% endwith %}</p>
-                <p><strong>Benefice client :</strong> {% with benef=idmission|benef_projet %}{{benef|safe}}{% endwith %}</p>
+                <!--<p><strong>Livrables :</strong> {% with livrable=idmission|livrable_projet %}{{livrable|safe}}{% endwith %}</p>-->
+                <!--<p><strong>Benefice client :</strong> {% with benef=idmission|benef_projet %}{{benef|safe}}{% endwith %}</p>-->
                 <p><strong>Environnement :</strong> {{mission.environnementMission|safe}} </p>
                 <a class="btn btn-primary bouton_modif_expe" role="button" href={{urlModif}} target="_blank">Modifier </a>
             </div>

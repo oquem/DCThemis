@@ -147,70 +147,28 @@ def index(request):
 def liste_consultant(request):
     template = loader.get_template('collab/liste_consultant_recherche.html')
     collab_list= collaborateurs.objects.all().order_by('nomCollaborateur')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(collab_list, 10)
-    try:
-        collabs= paginator.page(page)
-    except PageNotAnInteger:
-        collabs = paginator.page(1)
-    except EmptyPage:
-        collabs = paginator.page(paginator.num_pages)
-    context={'collabs':collabs}
+    context={'collabs':collab_list}
     return HttpResponse(template.render(context, request))
 #Liste consultant recherche
-def recherche_consultant(request):
+#def recherche_consultant(request):
     #chargement du template HTML
-    template = loader.get_template('collab/liste_consultant_recherche.html')
-    #Recherche
-    keywords=''
-    if request.method=='POST': # soumission du form
-        keywords = request.POST.get("nom", "") # <input type="text" name="nom">
-        all_queries = None
-        search_fields = ('nomCollaborateur','prenomCollaborateur')
-        for keyword in keywords.split(' '):
-            keyword_query = None
-            for field in search_fields:
-                each_query = Q(**{field + '__icontains': keyword})
-                if not keyword_query:
-                    keyword_query = each_query
-                else:
-                    keyword_query = keyword_query | each_query
-                    if not all_queries:
-                        all_queries = keyword_query
-                    else:
-                        all_queries = all_queries & keyword_query
-
-        collab_list = collaborateurs.objects.filter(all_queries).distinct()
-        page = request.GET.get('page', 1)
-        paginator = Paginator(collab_list, 5)
-        try:
-            collabs= paginator.page(page)
-        except PageNotAnInteger:
-            collabs = paginator.page(1)
-        except EmptyPage:
-            collabs = paginator.page(paginator.num_pages)
-        context={'collabs':collabs}
-        return HttpResponse(template.render(context, request))
-
-    else: # no data submitted
-        collab_list= collaborateurs.objects.all().order_by('nomCollaborateur')
-        page = request.GET.get('page', 1)
-        paginator = Paginator(collab_list, 10)
-        try:
-            collabs= paginator.page(page)
-        except PageNotAnInteger:
-            collabs = paginator.page(1)
-        except EmptyPage:
-            collabs = paginator.page(paginator.num_pages)
-        context={'collabs':collabs}
-        return HttpResponse(template.render(context, request))
+#    template = loader.get_template('collab/liste_consultant_recherche.html')
+#    collab_list = collaborateurs.objects.all()
+#    context={'collabs':collab_list}
+#    return HttpResponse(template.render(context, request))
 
 #Detail consultant
 def collaborateur_detail(request, collaborateurs_id):
     collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
     mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
+    expeSingificatives=[]
+    expeSingificatives.append(collab.expSignificative1)
+    expeSingificatives.append(collab.expSignificative2)
+    expeSingificatives.append(collab.expSignificative3)
+    expeSingificatives.append(collab.expSignificative4)
+    expeSingificatives.append(collab.expSignificative5)
     template = loader.get_template('collab/detail_consultant2.html')
-    context={'collab':collab, 'mission_du_collab':mission_du_collab}
+    context={'collab':collab, 'mission_du_collab':mission_du_collab,'expeSingificatives':expeSingificatives}
     return HttpResponse(template.render(context, request))
 #Ajout d'un consultant
 class collaborateursCreateView(CreateView):
@@ -226,15 +184,7 @@ def reussite_ajout_collaborateurs(request):
 def liste_client(request):
     template = loader.get_template('collab/liste_client2.html')
     client_list= client.objects.all().order_by('nomClient')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(client_list, 10)
-    try:
-        clients= paginator.page(page)
-    except PageNotAnInteger:
-        clients = paginator.page(1)
-    except EmptyPage:
-        clients = paginator.page(paginator.num_pages)
-    context={'clients':clients}
+    context={'clients':client_list}
     return HttpResponse(template.render(context, request))
 #Ajout d'un client
 class clientCreateView(LoginRequiredMixin, CreateView):
@@ -247,19 +197,11 @@ def reussite_ajout_client(request):
     template = loader.get_template('collab/reussite_ajout_client2.html')
     context={}
     return HttpResponse(template.render(context, request))    
-#Liste compétences PAGINEE
+#Liste compétences PAGINEE EN FRONT
 def liste_competence(request):
     template = loader.get_template('collab/liste_competence2.html')
     compe_list= competences.objects.all().order_by('famille')
-    page = request.GET.get('page', 1)
-    paginator = Paginator(compe_list, 10)
-    try:
-        compes= paginator.page(page)
-    except PageNotAnInteger:
-        compes = paginator.page(1)
-    except EmptyPage:
-        compes = paginator.page(paginator.num_pages)
-    context={'compes':compes}
+    context={'compes':compe_list}
     return HttpResponse(template.render(context, request))
 #Ajout d'une competence
 class competencesCreateView(LoginRequiredMixin, CreateView):
@@ -360,7 +302,6 @@ def generate_rich_texte (raw_html):
     rich_texte=RichText()
     html_decoupe=decoupe_html(raw_html)
     for elt in html_decoupe:
-        print(elt)
         if type(elt)==tuple:
             liste=elt[1]
             string_propre_de_liste=""
@@ -382,7 +323,7 @@ def generate_rich_texte (raw_html):
 def page_cv_word(request, collaborateurs_id):
     collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
     mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
-    fichier_template = staticfiles_storage.path('collab/CV_TEST.docx')
+    fichier_template = staticfiles_storage.path('collab/Thémis-conseil-DC_TEMPLATE.docx')
     doc = DocxTemplate(fichier_template)
     context = {}
     today = datetime.date.today()
@@ -391,15 +332,72 @@ def page_cv_word(request, collaborateurs_id):
     nom_sortie = nom + "-"+prenom+"-"+str(today)+".docx"
     titre = collab.titreCollaborateur
     texte_introductif = generate_rich_texte(collab.texteIntroductifCv)
+    #recup des compétences
     competencesDuCollab = collab.listeCompetencesCles.all()
     competences=[]
     for compe in competencesDuCollab:
         competences.append(compe.nomCompetence)
+    #recup des niveau d'intervention
+    NivInterven = collab.niveauxIntervention.all()
+    interventions=[]
+    for inter in NivInterven:
+        interventions.append(inter.libelle)
+    #recup des clients principaux
+    clientsPrincipaux = collab.clientPrincipaux.all()
+    clients=[]
+    for client in clientsPrincipaux:
+        clients.append(client.nomClient)
+    #recup des secteur
+    SecteurConsult = collab.expertiseSectorielle.all()
+    secteurs=[]
+    for secteur in SecteurConsult:
+        secteurs.append(secteur.nom)
+    #recup des outils
+    OutilsConsult = collab.outilsCollaborateur.all()
+    outils=[]
+    for outil in OutilsConsult:
+        outils.append(outil.nomOutil)
+    #recup des langues
+    LanguesConsult = collab.langues.all()
+    langues=[]
+    for langue in LanguesConsult:
+        langues.append(langue)
+    #recup des methodlogies
+    MethodoConsult = collab.methodologie.all()
+    methodologies=[]
+    for methodo in MethodoConsult:
+        methodologies.append(methodo.nom)
+    #recup des formations
+    FormationConsult = collab.formation.all()
+    formations=[]
+    for forma in FormationConsult:
+        formations.append(forma.formation)
+    #recup des missions (il faut tout recup car impossible d'utiliser les templatetags avec du Word)
+    missions=[]
+    for miss in mission_du_collab:
+        data={}
+        data["nomMission"]=miss.nomMission
+        data["Client"]=miss.client.nomClient
+        #data["Domaine"]=miss.client.nomClient A FAIRE
+    #Ajout des valeurs dans le context          
     context["nom"]=nom
     context["prenom"]=prenom
     context["titre"]=titre
     context["text_intro"]=texte_introductif
+    context["expeSigni1"]=collab.expSignificative1
+    context["expeSigni2"]=collab.expSignificative2
+    context["expeSigni3"]=collab.expSignificative3
+    context["expeSigni4"]=collab.expSignificative4
+    context["expeSigni5"]=collab.expSignificative5
     context["competences"]=competences
+    context["Interventions"]=interventions
+    context["clients"]=clients
+    context["secteurs"]=secteurs
+    context["outils"]=outils
+    context["langues"]=langues
+    context["methodologies"]=methodologies
+    context["formations"]=formations
+    context["missions"]=missions
     #Il faut encore brancher la fonction propre du dessus
     html_decoupe=['blablablabla',('list','1,2,3'),'reblabla']
     parcours = RichText()
@@ -414,8 +412,8 @@ def page_cv_word(request, collaborateurs_id):
             text='\n'+str(elt)
             parcours.add(text)
     context["parcours"]=parcours
-    trigramme = RichText('blablablablabla un paragraphe t\'a vu \a• poney\n• test\n\t• deuxieme niveau', style='bullet')
-    context["trigramme"]=trigramme
+    #trigramme = RichText('blablablablabla un paragraphe t\'a vu \a• poney\n• test\n\t• deuxieme niveau', style='bullet')
+    #context["trigramme"]=trigramme
     doc.render(context)
     doc_io = io.BytesIO()
     doc.save(doc_io)
