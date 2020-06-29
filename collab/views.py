@@ -10,7 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 import datetime
 from xhtml2pdf import pisa 
-from bs4 import BeautifulSoup
+import bs4
 from docxtpl import DocxTemplate, RichText, Listing
 import io
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -272,13 +272,23 @@ def page_cv_pdf(request, collaborateurs_id):
     return HttpResponse(pdf, 'application/pdf')
 
 # Fonction de parsing du HTML pour la generation de CV
+def make_tree(body: bs4.Tag):
+    branch = []
+    for ch in body.children:
+        if isinstance(ch, bs4.NavigableString):
+            if str(ch).strip():
+                branch.append(str(ch).strip())
+        else:
+            branch.append(make_tree(ch))
+    return branch
+
+
 def decoupe_html (raw_html):
-    soup=BeautifulSoup(raw_html,"html.parser")
+    soup=bs4.BeautifulSoup(raw_html,"html.parser")
     arbre=[]
     #decoupe en grand bloc HTML
     for elt in soup:
         arbre.append(elt)
-
     #On parcours chaque elt pour le transformer en truc compréhensible par Word dans une liste
     for elt in arbre:
         #recup du tag de début du "chunk"
@@ -290,48 +300,71 @@ def decoupe_html (raw_html):
             arbre[place]=texte
         #traitement des listes
         elif tag == "ul":
-            list_elt=[]
-            enfants = elt.findChildren()
-            #on récupère tous les elt de la liste
-            for chld in enfants:
-                list_elt.append(chld.text)
+            soup = bs4.BeautifulSoup(str(elt), 'html.parser')
+            tree = make_tree(soup.select_one('ul'))
             place=arbre.index(elt)
-            arbre[place]=("list",list_elt)
+            arbre[place]=tree
     return(arbre)
-def generate_rich_texte (raw_html):
-    rich_texte=RichText()
-    html_decoupe=decoupe_html(raw_html)
-    for elt in html_decoupe:
-        if type(elt)==tuple:
-            liste=elt[1]
-            string_propre_de_liste=""
-            for truc in liste:
-                string_propre_de_liste = "• "+string_propre_de_liste+truc+"\n"
-            if html_decoupe.index(elt) == 0:
-                text=string_propre_de_liste
+def generateRichText(listePropre):
+    rt = RichText(style='Normal')
+    for elt in listePropre:
+        #Gestion des paragraphes
+        if type(elt) == type('une string'):
+            if listePropre.index(elt) == 0:
+                rt.add(elt+'\n')
             else:
-                text='\a'+string_propre_de_liste
-            rich_texte.add(text)
-        else:
-            if html_decoupe.index(elt) == 0:
-                text=str(elt)
-            else:
-                text='\a'+str(elt)
-            rich_texte.add(text)
-    return(rich_texte)
+                text='\a'+elt+'\n'
+                rt.add(text)
+        #Gestion des listes
+        elif type(elt) == list:
+            ul=elt
+            #parcours des elements de la liste ul
+            for elt in ul:
+                for li in elt:
+                    #niv 1
+                    if type(li) == type('une string'):
+                        rt.add("• "+li+"\n")
+                    #sinon
+                    elif type(li) == list:
+                        for subul in li:
+                            for subli in subul:
+                                #niv 2
+                                if type(subli) == type('une string'):
+                                    rt.add("\t"+"○ "+subli+"\n")
+                                #sinon
+                                elif type(subli) == list:
+                                    for subsubul in subli:
+                                        for subsubli in subsubul:
+                                            #niv 3
+                                            if type(subsubli) == type('une string'):
+                                                rt.add("\t\t"+"◙ "+subsubli+"\n")
+                                            #sinon
+                                            elif type(subsubli) == list:
+                                                for subsubsubul in subsubli:
+                                                    for subsubsubli in subsubsubul:
+                                                        #niv4
+                                                        if type(subsubsubli) == type('une string'):
+                                                            rt.add("\t\t\t"+"■ "+subsubsubli+"\n")
+                                                
+    return(rt)
 #Page CV docx
 def page_cv_word(request, collaborateurs_id):
     collab = get_object_or_404(collaborateurs, pk=collaborateurs_id)
     mission_du_collab = experiences.objects.filter(collaborateurMission=collaborateurs_id).order_by('-dateDebut')
     fichier_template = staticfiles_storage.path('collab/Thémis-conseil-DC_TEMPLATE.docx')
     doc = DocxTemplate(fichier_template)
-    context = {}
     today = datetime.date.today()
+    context = {}
     nom = collab.nomCollaborateur
     prenom = collab.prenomCollaborateur
     nom_sortie = nom + "-"+prenom+"-"+str(today)+".docx"
     titre = collab.titreCollaborateur
-    texte_introductif = generate_rich_texte(collab.texteIntroductifCv)
+    #calcul nb année expe
+    dateExpeDebutAnne = collab.dateDebutExpPro.year
+    anneeActuelle = datetime.date.today().year
+    differenceExpe = anneeActuelle - dateExpeDebutAnne
+    nbAnneeExpe = differenceExpe
+    texte_introductif = generateRichText(decoupe_html(collab.texteIntroductifCv))
     #recup des compétences
     competencesDuCollab = collab.listeCompetencesCles.all()
     competences=[]
@@ -378,11 +411,31 @@ def page_cv_word(request, collaborateurs_id):
         data={}
         data["nomMission"]=miss.nomMission
         data["Client"]=miss.client.nomClient
-        #data["Domaine"]=miss.client.nomClient A FAIRE
+        data["Domaine"]=miss.client.domaineClient
+        data["Service"]=miss.service
+        data["dateDebut"]=miss.dateDebut
+        #calcul durée
+        dateFin=miss.dateFin
+        if dateFin is None:
+            fin = datetime.date.today()
+            debut = miss.dateDebut
+            dureeMission = (fin.year - debut.year) * 12 + (fin.month - debut.month)
+        else:
+            fin = miss.dateFin
+            debut = miss.dateDebut
+            dureeMission = (fin.year - debut.year) * 12 + (fin.month - debut.month)            
+        data["dureeMission"]=dureeMission
+        data["contexteMission"]=generateRichText(decoupe_html(miss.resumeIntervention))
+        data["descriptif"]=generateRichText(decoupe_html(miss.descriptifMission))
+        data["environnement"]=generateRichText(decoupe_html(miss.environnementMission))
+        missions.append(data)
+
     #Ajout des valeurs dans le context          
     context["nom"]=nom
     context["prenom"]=prenom
     context["titre"]=titre
+    context["trigramme"]=collab.trigramme
+    context["nbAnneeExpe"]=nbAnneeExpe
     context["text_intro"]=texte_introductif
     context["expeSigni1"]=collab.expSignificative1
     context["expeSigni2"]=collab.expSignificative2
@@ -398,22 +451,7 @@ def page_cv_word(request, collaborateurs_id):
     context["methodologies"]=methodologies
     context["formations"]=formations
     context["missions"]=missions
-    #Il faut encore brancher la fonction propre du dessus
-    html_decoupe=['blablablabla',('list','1,2,3'),'reblabla']
-    parcours = RichText()
-    for elt in html_decoupe:
-        if type(elt)==tuple:
-            liste=elt[1]
-            string_propre_de_liste=""
-            for elt in liste:
-                string_propre_de_liste = string_propre_de_liste+elt+"\n"
-            listing_word=Listing(string_propre_de_liste)
-        else:
-            text='\n'+str(elt)
-            parcours.add(text)
-    context["parcours"]=parcours
-    #trigramme = RichText('blablablablabla un paragraphe t\'a vu \a• poney\n• test\n\t• deuxieme niveau', style='bullet')
-    #context["trigramme"]=trigramme
+    context["parcours"]=generateRichText(decoupe_html(collab.parcours))
     doc.render(context)
     doc_io = io.BytesIO()
     doc.save(doc_io)
