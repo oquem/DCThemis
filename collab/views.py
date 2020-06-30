@@ -305,8 +305,52 @@ def decoupe_html (raw_html):
             place=arbre.index(elt)
             arbre[place]=tree
     return(arbre)
-def generateRichText(listePropre):
-    rt = RichText(style='Normal')
+def DC_RT_Texte (rt, soup_text, dc_style):
+    try:
+        rt.add_paragraph(soup_text, style=dc_style)
+    except:
+        print ("PROBLEME : rt.add_paragraph('"+soup_text.string+"\a', style='"+dc_style+"')")
+    return rt
+def DC_RT_P (rt, soup_text, dc_style):
+    for soup_element in soup_text.contents:
+        rt = DC_RT_Texte(rt, soup_element.string, dc_style+"_Paragraphe")
+    return rt
+def DC_RT_LI (rt, soup_text, dc_style, dc_level):
+    for soup_element in soup_text.contents:
+        if isinstance(soup_element, str):
+            rt = DC_RT_Texte(rt, soup_element.string, dc_style+"_Puce"+str(dc_level))
+        elif soup_element.name =="ul":
+            rt = DC_RT_UL (rt, soup_element, dc_style, dc_level+1)
+    return rt
+def DC_RT_UL (rt, soup_text, dc_style, dc_level):
+    for soup_element in soup_text.contents:
+        if isinstance(soup_element, str):
+            #on fait rien
+            do_nothing=1
+        elif soup_element.name == "li":
+            rt = DC_RT_LI (rt, soup_element, dc_style, dc_level)
+    return rt
+def generateRichText (doc, html_text, dc_style):
+    rt = doc.new_subdoc()
+    IsHtmlElement = bool(bs4.BeautifulSoup(html_text, "html.parser").find())
+    if bool(bs4.BeautifulSoup(html_text, "html.parser").find()):
+        html_text = html_text.replace('\n','')
+        html_text = html_text.replace('\t','')
+        soup_text = bs4.BeautifulSoup(html_text, "html.parser")
+        for soup_element in soup_text.contents:
+            if isinstance(soup_element, str):
+                #on fait rien
+                do_nothing=1
+            elif soup_element.name == "p":
+                rt = DC_RT_P (rt, soup_element, dc_style)
+            elif soup_element.name == "ul":
+                rt = DC_RT_UL (rt, soup_element, dc_style, 1)
+    else:
+        rt = DC_RT_Texte(rt, html_text, dc_style)
+    return rt
+def generateRichText2(doc, raw_html, DC_STYLE):
+    listePropre = decoupe_html (raw_html)
+    rt = RichText(style=DC_STYLE)
     for elt in listePropre:
         #Gestion des paragraphes
         if type(elt) == type('une string'):
@@ -360,11 +404,14 @@ def page_cv_word(request, collaborateurs_id):
     nom_sortie = nom + "-"+prenom+"-"+str(today)+".docx"
     titre = collab.titreCollaborateur
     #calcul nb année expe
-    dateExpeDebutAnne = collab.dateDebutExpPro.year
+    if isinstance(collab.dateDebutExpPro,datetime.datetime):
+        dateExpeDebutAnne = collab.dateDebutExpPro.year
+    else:
+        dateExpeDebutAnne = datetime.date.today().year	
     anneeActuelle = datetime.date.today().year
     differenceExpe = anneeActuelle - dateExpeDebutAnne
     nbAnneeExpe = differenceExpe
-    texte_introductif = generateRichText(decoupe_html(collab.texteIntroductifCv))
+    texte_introductif = generateRichText(doc, collab.texteIntroductifCv, "DC_Text_Intro")
     #recup des compétences
     competencesDuCollab = collab.listeCompetencesCles.all()
     competences=[]
@@ -425,9 +472,9 @@ def page_cv_word(request, collaborateurs_id):
             debut = miss.dateDebut
             dureeMission = (fin.year - debut.year) * 12 + (fin.month - debut.month)            
         data["dureeMission"]=dureeMission
-        data["contexteMission"]=generateRichText(decoupe_html(miss.resumeIntervention))
-        data["descriptif"]=generateRichText(decoupe_html(miss.descriptifMission))
-        data["environnement"]=generateRichText(decoupe_html(miss.environnementMission))
+        data["contexteMission"]=generateRichText(doc,miss.resumeIntervention, "DC_Intervention_Contexte")
+        data["descriptif"]=generateRichText(doc, miss.descriptifMission, "DC_Intervention_Desc")
+        data["environnement"]=generateRichText(doc, miss.environnementMission, "DC_Intervention_Env")
         missions.append(data)
 
     #Ajout des valeurs dans le context          
@@ -451,7 +498,7 @@ def page_cv_word(request, collaborateurs_id):
     context["methodologies"]=methodologies
     context["formations"]=formations
     context["missions"]=missions
-    context["parcours"]=generateRichText(decoupe_html(collab.parcours))
+    context["parcours"]=generateRichText(doc,collab.parcours, "DC_Parcours")
     doc.render(context)
     doc_io = io.BytesIO()
     doc.save(doc_io)
