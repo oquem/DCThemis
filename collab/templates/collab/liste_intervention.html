@@ -1,0 +1,44 @@
+{% extends 'collab/base.html' %}
+{% load collab_extras %}
+{% block content %}    
+    <div class="page-header">
+        <h1 class="text-center">Liste Intervention</h1></div>
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
+                <div class="table-responsive" id="liste-consultant">
+                    <table class="table table-striped table-bordered" data-toggle="table" data-pagination="true" data-search="true">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="text-center" data-sortable="true">Nom mission </th>
+                                <th class="text-center" data-sortable="true">Date Début </th>
+                                <th class="text-center" data-sortable="true">Client </th>
+                                <th class="text-center" data-sortable="true">Collaborateur </th>
+                                <th class="hidden-xs hidden-sm text-center" data-sortable="true">Date de fin </th>
+                                <th class="hidden-xs hidden-sm text-center">Modification </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mission in missions %}
+                            {% with truc=mission.pk %}
+                            {% with "/admin/collab/experiences/"|addstr:mission.pk|addstr:"/change/" as urlModif %}
+                            <tr>
+                                <td>{{mission.nomMission}} </td>
+                                <td>{{mission.dateDebut}} </td>
+                                <td>{{mission.client}} </td>
+                                <td>{{mission.collaborateurMission}}</td>
+                                <td class="hidden-xs hidden-sm">{% if not mission.dateFin %}En cours{% else %}{{mission.dateFin}}{% endif %}</td>
+                                <td class="hidden-xs hidden-sm">
+                                    <a class="btn btn-primary" role="button" href={{urlModif}}> <i class="glyphicon glyphicon-pencil"></i></a>
+                                </td>
+                            </tr>
+                            {% endwith %}
+                            {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
