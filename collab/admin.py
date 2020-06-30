@@ -19,6 +19,7 @@ class CollabAdmin(admin.ModelAdmin):
     search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence','nomCollaborateur', 'prenomCollaborateur',]
     list_filter = ('estEnIntercontrat','manager__manager','typeContrat','grade','methodologie')
     list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur','typeContrat')
+    filter_horizontal = ('clientPrincipaux','listeCompetencesCles','langues','expertiseSectorielle','niveauxIntervention','methodologie','outilsCollaborateur')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
