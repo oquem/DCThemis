@@ -14,6 +14,7 @@
                                 <th class="text-center" data-sortable="true">Date Début </th>
                                 <th class="text-center" data-sortable="true">Client </th>
                                 <th class="text-center" data-sortable="true">Collaborateur </th>
+                                <th class="text-center" data-sortable="true">Projet </th>
                                 <th class="hidden-xs hidden-sm text-center" data-sortable="true">Date de fin </th>
                                 <th class="hidden-xs hidden-sm text-center">Modification </th>
                             </tr>
@@ -27,6 +28,7 @@
                                 <td>{{mission.dateDebut}} </td>
                                 <td>{{mission.client}} </td>
                                 <td>{{mission.collaborateurMission}}</td>
+                                <td>{% if not mission.projetDeLaMission %}{% else %}{{mission.projetDeLaMission}}{% endif %}</td>
                                 <td class="hidden-xs hidden-sm">{% if not mission.dateFin %}En cours{% else %}{{mission.dateFin}}{% endif %}</td>
                                 <td class="hidden-xs hidden-sm">
                                     <a class="btn btn-primary" role="button" href={{urlModif}}> <i class="glyphicon glyphicon-pencil"></i></a>

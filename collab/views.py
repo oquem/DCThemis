@@ -173,7 +173,7 @@ def collaborateur_detail(request, collaborateurs_id):
 #Ajout d'un consultant
 class collaborateursCreateView(CreateView):
     model = collaborateurs
-    fields = ('nomCollaborateur', 'prenomCollaborateur','titreCollaborateur','texteIntroductifCv','nbAnneeExperience','listeCompetencesCles','formation','parcours','methodologie','langues','outilsCollaborateur','estEnIntercontrat')
+    fields = ('nomCollaborateur', 'prenomCollaborateur','titreCollaborateur','texteIntroductifCv','listeCompetencesCles','formation','parcours','methodologie','langues','outilsCollaborateur','estEnIntercontrat')
     success_url = 'succes/'
 def reussite_ajout_collaborateurs(request):
     template = loader.get_template('collab/reussite_ajout_collaborateurs2.html')
