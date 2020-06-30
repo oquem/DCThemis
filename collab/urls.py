@@ -19,5 +19,6 @@ urlpatterns = [
     path('competence/ajout/succes/', views.reussite_ajout_competence, name='reussite_ajout_competence'),
     path('outil/', views.liste_outil_propre, name='liste_outil_propre'),
     path('outil/ajout/', views.outilsCreateView.as_view(), name='outilsCreateView'),
-    path('outil/ajout/succes/', views.reussite_ajout_outil, name='reussite_ajout_outil')
+    path('outil/ajout/succes/', views.reussite_ajout_outil, name='reussite_ajout_outil'),
+    path('intervention/', views.liste_intervention, name='liste_intervention'),
 ]

@@ -460,3 +460,10 @@ def page_cv_word(request, collaborateurs_id):
     response["Content-Disposition"] = "attachment; filename="+nom_sortie
     response["Content-Type"] = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     return response
+
+#Page liste intervention
+def liste_intervention(request):
+    template = loader.get_template('collab/liste_intervention.html')
+    mission_list= experiences.objects.all().order_by('nomMission')
+    context={'missions':mission_list}
+    return HttpResponse(template.render(context, request))
