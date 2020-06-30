@@ -191,7 +191,7 @@ class collaborateurs(models.Model):
     outilsCollaborateur = models.ManyToManyField(outils, blank=True, verbose_name='Outils')
     estEnIntercontrat = models.BooleanField(default=False)
     def __str__(self):
-        return self.nomCollaborateur
+        return self.nomCollaborateur + "-" + self.prenomCollaborateur
     def get_absolute_url(self):
         return "/consultant/%i/" % self.id
     class Meta: 
