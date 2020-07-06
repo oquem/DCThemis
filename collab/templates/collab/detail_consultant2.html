@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-11">
                 {% with id_collab=collab.pk %}
                 {% with nbAnneeExperience=id_collab|calcul_annee_exp %}
                 {% if nbAnneeExperience == '1' %}
@@ -22,6 +22,9 @@
                 <p class="lead text-center">{{collab.texteIntroductifCv | safe}}</p>
                 {% endwith %}
                 {% endwith %}
+            </div>
+            <div class="col-md-1">
+                <a class="btn btn-primary" role="button" href="/admin/collab/collaborateurs/{{collab.pk}}/change"> <i class="glyphicon glyphicon-pencil"></i></a>
             </div>
         </div>
         <div class="row">
