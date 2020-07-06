@@ -1,7 +1,7 @@
 {% load static %}
 {% load admin_urls %}
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
     <meta charset="utf-8">
@@ -14,6 +14,7 @@
     <link rel="stylesheet" href={% static "collab/assets/css/Full-Width-Center-Container.css" %}>
     <link rel="stylesheet" href={% static "collab/assets/css/Simple-Profile-Info.css" %}>
     <link rel="stylesheet" href={% static "collab/assets/css/Google-Style-Login.css" %}>
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
 </head>
 
@@ -46,8 +47,14 @@
                     </li>
                     <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Outils <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a href="{% url 'liste_outil'%}">Liste Outils</a></li>
+                            <li role="presentation"><a href="{% url 'liste_outil_propre'%}">Liste Outils</a></li>
                             <li role="presentation"><a href="{% url 'outilsCreateView'%}">Ajout d'un outil</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">Intervention <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a href="{% url 'liste_intervention'%}">Liste Intervention</a></li>
+                            <li role="presentation"><a href="#">Ajout Intervention</a></li>
                         </ul>
                     </li>
                     <li role="presentation"><a href="https://intranet.itsgroup.fr/" target="_blank">Intranet ITS </a></li>
@@ -71,6 +78,7 @@
     {% endif %}
     <script src={% static "collab/assets/js/jquery.min.js" %}></script>
     <script src={% static "collab/assets/bootstrap/js/bootstrap.min.js" %}></script>
+    <script src="https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"></script>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, client, projet, BU, gestionManagerialeProjet, gestionCommercialeProjet, gestionManagerialeConsultant, expertiseSectorielle, formation, obtentionFormation, niveauIntervention, LanguesParlee
+from .models import competences, familleCompetences, outils, familleOutils, collaborateurs, experiences, client, projet, BU, gestionManagerialeProjet, gestionCommercialeProjet, gestionManagerialeConsultant, expertiseSectorielle, formation, obtentionFormation, niveauIntervention, LanguesParlee, Methodo
 
 class CompetenceAdmin(admin.ModelAdmin):
     search_fields = ['nomCompetence']
@@ -16,20 +16,22 @@ class OutilAdmin(admin.ModelAdmin):
 admin.site.register(outils, OutilAdmin)
 admin.site.register(familleOutils)
 class CollabAdmin(admin.ModelAdmin):
-    search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence']
-    list_filter = ('estEnIntercontrat','nbAnneeExperience','manager__manager','typeContrat')
-    list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur')
+    search_fields = ['outilsCollaborateur__nomOutil','listeCompetencesCles__nomCompetence','nomCollaborateur', 'prenomCollaborateur',]
+    list_filter = ('estEnIntercontrat','manager__manager','typeContrat','grade','methodologie')
+    list_display = ('nomCollaborateur', 'prenomCollaborateur', 'titreCollaborateur','typeContrat')
+    filter_horizontal = ('expertiseSectorielle','niveauxIntervention','clientPrincipaux','listeCompetencesCles','methodologie','langues','outilsCollaborateur','formation')
     view_on_site = True
 admin.site.register(collaborateurs, CollabAdmin)
 class ExpeAdmin(admin.ModelAdmin):
-    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','employeurIntervention','service']
-    list_filter = ('employeurIntervention','collaborateurMission__nomCollaborateur','mandataire')
+    search_fields = ['collaborateurMission__nomCollaborateur','collaborateurMission__prenomCollaborateur','mandataire','service','nomMission','projetDeLaMission__client__nomClient']
+    list_filter = ('collaborateurMission__nomCollaborateur','mandataire','projetDeLaMission__client','missionThemis','projetDeLaMission')
+    list_display = ('nomMission', 'collaborateurMission', 'projetDeLaMission')
     view_on_site = True
 admin.site.register(experiences, ExpeAdmin)
 class ProjetAdmin(admin.ModelAdmin):
     search_fields = ['client','nomProjet']
-    list_filter = ('client','experiencesLiees__collaborateurMission__nomCollaborateur','nbJourHomme')
-    list_display = ('nomProjet', 'nbJourHomme')
+    list_filter = ('client','nbJourHomme','projetThemis')
+    list_display = ('nomProjet','client','nbJourHomme')
 admin.site.register(projet, ProjetAdmin)
 class ClientAdmin(admin.ModelAdmin):
     search_fields = ['nomClient']
@@ -56,3 +58,4 @@ admin.site.register(formation, FormationAdmin)
 admin.site.register(obtentionFormation)
 admin.site.register(niveauIntervention)
 admin.site.register(LanguesParlee)
+admin.site.register(Methodo)
